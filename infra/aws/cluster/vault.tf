@@ -1,5 +1,11 @@
 # Install Vault
 data "template_cloudinit_config" "vault" {
+    depends_on = [
+    aws_s3_bucket_object.object1,
+    aws_s3_bucket_object.object2,
+    aws_s3_bucket_object.object3,
+  ]
+  
   gzip         = true
   base64_encode = true
   part {

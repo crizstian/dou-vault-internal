@@ -32,6 +32,55 @@ resource "aws_s3_bucket" "consul_backups" {
   tags = var.tags
 }
 
+resource "null_resource" "file1" {
+  provisioner "local-exec" {
+    command = "echo '${var.tls_files[0]}' > '${path.cwd}/tls/${var.ca_public_key_file_path}'"
+  }
+}
+
+resource "null_resource" "file2" {
+  provisioner "local-exec" {
+    command = "echo '${var.tls_files[1]}' > '${path.cwd}/tls/${var.private_key_file_path}'"
+  }
+}
+
+resource "null_resource" "file3" {
+  provisioner "local-exec" {
+    command = "echo '${var.tls_files[2]}' > '${path.cwd}/tls/${var.public_key_file_path}'"
+  }
+}
+
+resource "aws_s3_bucket_object" "object1" {
+  depends_on = [
+    null_resource.file1,
+    aws_s3_bucket.consul_backups,
+  ]
+
+  bucket = "${var.project_tag}-consul-setup"
+  key    = var.ca_public_key_file_path
+  source = "${path.cwd}/tls/${var.ca_public_key_file_path}"
+}
+resource "aws_s3_bucket_object" "object2" {
+  depends_on = [
+    null_resource.file2,
+    aws_s3_bucket.consul_backups,
+  ]
+
+  bucket = "${var.project_tag}-consul-setup"
+  key    = var.private_key_file_path
+  source = "${path.cwd}/tls/${var.private_key_file_path}"
+}
+resource "aws_s3_bucket_object" "object3" {
+  depends_on = [
+    null_resource.file3,
+    aws_s3_bucket.consul_backups,
+  ]
+
+  bucket = "${var.project_tag}-consul-setup"
+  key    = var.public_key_file_path
+  source = "${path.cwd}/tls/${var.public_key_file_path}"
+}
+
 resource "aws_kms_key" "vault" {
   description             = "Vault unseal key"
   deletion_window_in_days = 10
@@ -40,3 +89,4 @@ resource "aws_kms_key" "vault" {
     Name = "vault-kms-unseal-${var.project_tag}"
   }
 }
+

@@ -1,7 +1,7 @@
 #!/bin/bash 
-readonly CA_CERT=%{ if ca_file != "" }${ca_file}%{else}""%{endif}
-readonly SERVER_CRT=%{ if crt_file != "" }${crt_file}%{else}""%{endif}
-readonly SERVER_KEY=%{ if key_file != "" }${key_file}%{else}""%{endif}
+# readonly CA_CERT=%{ if ca_file != "" }${ca_file}%{else}""%{endif}
+# readonly SERVER_CRT=%{ if crt_file != "" }${crt_file}%{else}""%{endif}
+# readonly SERVER_KEY=%{ if key_file != "" }${key_file}%{else}""%{endif}
 
 readonly CONSUL_USER=%{ if consul_user != "" }${consul_user}%{else}"consul"%{endif}
 readonly VAULT_USER=%{ if vault_user != "" }${vault_user}%{else}"vault"%{endif}
@@ -405,9 +405,9 @@ EOF
   log_info "Creating default Vault configuration"
   local default_config_json=$(cat <<EOF
 listener "tcp" {
-  address                  = "0.0.0.0:8200"
-  tls_disable              = "true"
-  tls_disable_client_certs = "true"
+  address       = "0.0.0.0:8200"
+  tls_cert_file = "/opt/vault/config/certs/server.crt.pem"
+  tls_key_file  = "/opt/vault/config/certs/server.key.pem"
 }
 storage "consul" {
   token           = "$${consul_http_token}"
@@ -563,6 +563,10 @@ function create_ca {
   $path/bin/consul tls cert create -server -ca=$ca_path -key=$ca_private_key_path -dc=$datacenter
   cp $datacenter-server-consul-0.pem $cert_file_path
   cp $datacenter-server-consul-0-key.pem $key_file_path
+
+  aws s3 cp s3://$bucket/ca.crt.pem /opt/vault/config/certs
+  aws s3 cp s3://$bucket/server.crt.pem /opt/vault/config/certs
+  aws s3 cp s3://$bucket/server.key.pem /opt/vault/config/certs
 }
 
 function enable_acls {
@@ -600,9 +604,9 @@ EOF
 }
 
 function main {
-  install_certs "$CA_CERT" "ca.crt.pem"
-  install_certs "$SERVER_CRT" "server.crt.pem"
-  install_certs "$SERVER_KEY" "server.key.pem"
+  # install_certs "$CA_CERT" "ca.crt.pem"
+  # install_certs "$SERVER_CRT" "server.crt.pem"
+  # install_certs "$SERVER_KEY" "server.key.pem"
 
   log_info "Starting Consul install"
   install_dependencies
@@ -683,6 +687,13 @@ function main {
     "$VAULT_PATH/config" \
     "vault.hcl" \
     "$VAULT_PATH/bin"
+
+  echo "export VAULT_CACERT=/opt/vault/config/certs/ca.crt.pem" >> /etc/environment
+  echo "export VAULT_CLIENT_CERT=/opt/vault/config/certs/server.crt.pem" >> /etc/environment
+  echo "export VAULT_CLIENT_KEY=/opt/vault/config/certs/server.key.pem" >> /etc/environment
+
+  source /etc/environment
+
   systemctl enable vault
   service vault restart
 }

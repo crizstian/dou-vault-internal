@@ -24,12 +24,12 @@ module "tls-files" {
   ]
 }
 
-module "bastion" {
-  source = "./bastion"
+// module "bastion" {
+//   source = "./bastion"
 
-  project_tag = random_id.project_tag.hex
-  tags        = var.tags
-}
+//   project_tag = random_id.project_tag.hex
+//   tags        = var.tags
+// }
 
 module "vault-consul-primary-cluster" {
   source = "./cluster"

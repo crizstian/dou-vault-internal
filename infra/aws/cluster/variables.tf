@@ -66,3 +66,18 @@ variable "subnet_second_octet" { default = "0" }
 variable "create_bastion" { default = true }
 
 variable "tls_files" {}
+
+variable "ca_public_key_file_path" {
+  description = "Write the PEM-encoded CA certificate public key to this path (e.g. /etc/tls/ca.crt.pem)."
+  default = "ca.crt.pem"
+}
+
+variable "public_key_file_path" {
+  description = "Write the PEM-encoded certificate public key to this path (e.g. /etc/tls/vault.crt.pem)."
+  default = "server.crt.pem"
+}
+
+variable "private_key_file_path" {
+  description = "Write the PEM-encoded certificate private key to this path (e.g. /etc/tls/vault.key.pem)."
+  default = "server.key.pem"
+}
