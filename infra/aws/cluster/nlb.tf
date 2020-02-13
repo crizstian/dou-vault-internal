@@ -1,6 +1,3 @@
-data "aws_elb_service_account" "main" {}
-
-
 resource "aws_lb" "cluster_nlb" {
   name                             = "${var.project_tag}-nlb"
   internal                         = var.nlb_internal

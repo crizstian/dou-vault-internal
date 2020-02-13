@@ -1,4 +1,0 @@
-**/.terraform*
-**/.DS_STORE
-**/*.tfvars
-**/*.tfstate
