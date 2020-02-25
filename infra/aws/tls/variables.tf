@@ -42,6 +42,7 @@ variable "dns_names" {
   description = "List of DNS names for which the certificate will be valid (e.g. vault.service.consul, foo.example.com)."
   type        = list(string)
   default = [
+    "localhost",
     "vault.service.consul",
     "server.dc1.consul",
     "server.dc2.consul",
@@ -49,9 +50,8 @@ variable "dns_names" {
     "server.dc2-region.nomad",
     "dc1-consul-server",
     "dc2-consul-server",
-    "*",
     "vault.douvault.com",
-    "*.douvault.com"
+    "*",
   ]
 }
 
@@ -59,8 +59,8 @@ variable "ip_addresses" {
   description = "List of IP addresses for which the certificate will be valid (e.g. 127.0.0.1)."
   type        = list(string)
   default = [
-    "0.0.0.0", 
-    "127.0.0.1"
+    "0.0.0.0",
+    "127.0.0.1",
   ]
 }
 

@@ -4,6 +4,7 @@ data "template_cloudinit_config" "vault" {
     aws_s3_bucket_object.object1,
     aws_s3_bucket_object.object2,
     aws_s3_bucket_object.object3,
+    data.template_cloudinit_config.consul,
   ]
   
   gzip         = true
@@ -13,13 +14,15 @@ data "template_cloudinit_config" "vault" {
     content_type = "text/x-shellscript"
     content = templatefile("${path.cwd}/cluster/vault-installation.tpl",
       {
+      consul_scheme                       = "https",
+      consul_port                         = 8500,
       consul_path                   = var.consul_path,
       vault_path                    = var.vault_path,
       consul_user                   = var.consul_user,
       vault_user                    = var.vault_user,
-      ca_path                       = var.ca_path,
-      cert_file_path                = var.cert_file_path,
-      key_file_path                 = var.key_file_path,
+      ca_file_path                        = "/opt/vault/config/certs/ca.crt.pem",
+      cert_file_path                      = "/opt/vault/config/certs/server.crt.pem",
+      key_file_path                       = "/opt/vault/config/certs/server.key.pem",
       server                        = var.server,
       client                        = var.client,
       config_dir                    = var.config_dir,
@@ -40,9 +43,6 @@ data "template_cloudinit_config" "vault" {
       enable_consul_http_encryption = var.enable_consul_http_encryption,
       consul_backup_bucket          = aws_s3_bucket.consul_backups[0].id,
       kms_key                       = aws_kms_key.vault.id
-      ca_file                             = var.tls_files[0]
-      crt_file                            = var.tls_files[1]
-      key_file                            = var.tls_files[2]
       }
     )
   }

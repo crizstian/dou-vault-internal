@@ -1,4 +1,10 @@
 data "template_cloudinit_config" "consul" {
+  depends_on = [
+    aws_s3_bucket_object.object1,
+    aws_s3_bucket_object.object2,
+    aws_s3_bucket_object.object3,
+  ]
+  
   gzip          = true
   base64_encode = true
   part {
@@ -6,11 +12,13 @@ data "template_cloudinit_config" "consul" {
     content_type = "text/x-shellscript"
     content = templatefile("${path.cwd}/cluster/consul-installation.tpl",
       {
+        consul_scheme                       = "https",
+        consul_port                         = 8500,
         consul_path                         = var.consul_path,
         consul_user                         = var.consul_user,
-        ca_path                             = var.ca_path,
-        cert_file_path                      = var.cert_file_path,
-        key_file_path                       = var.key_file_path,
+        ca_file_path                        = "/opt/vault/config/certs/ca.crt.pem",
+        cert_file_path                      = "/opt/vault/config/certs/server.crt.pem",
+        key_file_path                       = "/opt/vault/config/certs/server.key.pem",
         server                              = var.server,
         client                              = var.client,
         config_dir                          = var.config_dir,
@@ -37,9 +45,6 @@ data "template_cloudinit_config" "consul" {
         enable_acls                         = var.enable_acls,
         enable_consul_http_encryption       = var.enable_consul_http_encryption,
         consul_backup_bucket                = aws_s3_bucket.consul_backups[0].id,
-        ca_file                             = var.tls_files[0]
-        crt_file                            = var.tls_files[1]
-        key_file                            = var.tls_files[2]
       }
     )
   }

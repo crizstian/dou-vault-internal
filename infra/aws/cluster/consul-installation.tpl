@@ -1,9 +1,4 @@
 #!/bin/bash 
-
-readonly CA_CERT=%{ if ca_file != "" }${ca_file}%{else}""%{endif}
-readonly SERVER_CRT=%{ if crt_file != "" }${crt_file}%{else}""%{endif}
-readonly SERVER_KEY=%{ if key_file != "" }${key_file}%{else}""%{endif}
-
 readonly CONSUL_USER=%{ if consul_user != "" }${consul_user}%{else}"consul"%{endif}
 readonly SCRIPT_DIR="$(cd "$(dirname "$${BASH_SOURCE[0]}")" && pwd)"
 readonly SYSTEM_BIN_DIR="/usr/local/bin"
@@ -20,11 +15,9 @@ readonly EC2_INSTANCE_DYNAMIC_DATA_URL="http://169.254.169.254/latest/dynamic"
 readonly MAX_RETRIES=30
 readonly SLEEP_BETWEEN_RETRIES_SEC=10
 
+readonly CONSUL_SCHEME=%{ if consul_scheme != "" }${consul_scheme}%{else}"http"%{endif}
+readonly CONSUL_PORT=%{ if consul_port != "" }${consul_port}%{else}8500%{endif}
 readonly CONSUL_PATH=%{ if consul_path != "" }${consul_path}%{else}"/opt/consul"%{endif}
-readonly CA_PATH=%{ if ca_path != "" }${ca_path}%{else}"$CONSUL_PATH/tls/ca/ca.pem"%{endif}
-readonly CA_PRIVATE_KEY_PATH=$CONSUL_PATH/tls/ca/ca_private_key.pem
-readonly CERT_FILE_PATH=%{ if cert_file_path != "" }${cert_file_path}%{else}"$CONSUL_PATH/tls/server.pem"%{endif}
-readonly KEY_FILE_PATH=%{ if key_file_path != "" }${key_file_path}%{else}"$CONSUL_PATH/tls/key.pem"%{endif}
 
 readonly DATACENTER=%{ if datacenter != "" }${datacenter}%{ else }dc1%{ endif }
 
@@ -375,18 +368,6 @@ EOF
   fi
 
   local rpc_encryption_configuration=""
-  if [[ "$enable_rpc_encryption" == "true" && ! -z "$ca_path" && ! -z "$cert_file_path" && ! -z "$key_file_path" ]]; then
-    log_info "Creating RPC encryption configuration"
-    rpc_encryption_configuration=$(cat <<EOF
-"verify_outgoing": true,
-"verify_incoming": true,
-"ca_path": "$ca_path",
-"cert_file": "$cert_file_path",
-"key_file": "$key_file_path",
-EOF
-)
-  fi
-
   local acl_configuration=""
   if [ "$enable_acls" == "true" ]; then
     log_info "Creating ACL configuration"
@@ -396,6 +377,23 @@ EOF
   "default_policy": "deny",
   "enable_token_persistence": true
 },
+"auto_encrypt" : {
+   "allow_tls" : true
+},
+"verify_incoming"        : false,
+"verify_incoming_rpc"    : true,
+"verify_outgoing"        : true,
+"verify_server_hostname" : true,
+"ca_file": "/opt/vault/config/certs/ca.crt.pem",
+"cert_file": "/opt/vault/config/certs/server.crt.pem",
+"key_file": "/opt/vault/config/certs/server.key.pem",
+"ports" : {
+  "grpc"  : 8502,
+  "https" : 8500,
+  "http"  : -1
+},
+"encrypt_verify_incoming" : true,
+"encrypt_verify_outgoing" : true,
 EOF
 )
   fi
@@ -498,6 +496,15 @@ EOF
 function start_consul {
   log_info "Reloading systemd config and starting Consul"
 
+  echo "export CONSUL_SCHEME=$1" >> /etc/environment
+  echo "export CONSUL_PORT=$2" >> /etc/environment
+  echo "export CONSUL_HTTP_ADDR=$1://127.0.0.1:$2" >> /etc/environment
+  echo "export CONSUL_CACERT=/opt/vault/config/certs/ca.crt.pem" >> /etc/environment
+  echo "export CONSUL_CLIENT_CERT=/opt/vault/config/certs/server.crt.pem" >> /etc/environment
+  echo "export CONSUL_CLIENT_KEY=/opt/vault/config/certs/server.key.pem" >> /etc/environment
+
+  source /etc/environment
+
   sudo systemctl daemon-reload
   sudo systemctl enable consul.service
   sudo systemctl restart consul.service
@@ -525,48 +532,13 @@ function configure_gossip_encryption {
   esac
 }
 
-function create_ca {
-  local -r bucket="$1"
-  local -r bucketkms="$2"
-  local -r path="$3"
-  local -r ca_path="$4"
-  local -r datacenter="$5"
-  local -r cert_file_path="$6"
-  local -r key_file_path="$7"
-
-  ca_private_key_path=$path/tls/ca/ca_private_key.pem
-
-  aws s3 ls s3://$bucket/consul-agent-ca-key.pem
-  ec=$?
-  case $ec in
-    0) log_info "Consul CA already exists"
-       aws s3 cp s3://$bucket/consul-agent-ca.pem $ca_path
-       aws s3 cp s3://$bucket/consul-agent-ca-key.pem $ca_private_key_path --sse aws:kms --sse-kms-key-id=$bucketkms
-    ;;
-    1) log_info "Creating CA"
-       $path/bin/consul tls ca create
-       cp consul-agent-ca.pem $ca_path
-       aws s3 cp consul-agent-ca.pem s3://$bucket/consul-agent-ca.pem
-       cp consul-agent-ca-key.pem $ca_private_key_path
-       aws s3 cp consul-agent-ca-key.pem s3://$bucket/consul-agent-ca-key.pem --sse aws:kms --sse-kms-key-id=$bucketkms
-    ;;
-    *) log_error "Error, aws s3 ls for consul-agent-ca-key.pem did not return 0 or 1, but instead $ec"
-    ;;
-  esac
-  $path/bin/consul tls cert create -server -ca=$ca_path -key=$ca_private_key_path -dc=$datacenter
-  cp $datacenter-server-consul-0.pem $cert_file_path
-  cp $datacenter-server-consul-0-key.pem $key_file_path
-
-  
-}
-
 function enable_acls {
   local -r bucket="$1"
   local -r bucketkms="$2"
   local -r path="$3"
 
   log_info "Bootstrapping ACLs"
-  curl localhost:8500/v1/status/leader | grep `curl http://169.254.169.254/latest/meta-data/local-ipv4`
+  curl --cacert /opt/vault/config/certs/ca.crt.pem https://127.0.0.1:8500/v1/status/leader | grep `curl http://169.254.169.254/latest/meta-data/local-ipv4`
   ec=$?
   case $ec in
     0) log_info "This is the leader"
@@ -584,14 +556,16 @@ function enable_acls {
     0) log_info "Consul ACLs already bootstrapped"
        consul_http_token=`aws s3 cp s3://${bucket}/consul-http-token - --sse aws:kms --sse-kms-key-id=${bucketkms}`
        sed -i "/\"acl\":/a \"tokens\": { \"agent\":  \"$consul_http_token\" }," /opt/consul/config/default.json
+       source /etc/environment
        service consul restart
     ;;
     1) log_info "Bootstrapping ACLs"
-       consul_http_token=`$path/bin/consul acl bootstrap | grep SecretID | sed 's/\(SecretID:\)[ ]*\([a-z1-9-]*\)/\2/'`
+       consul_http_token=`CONSUL_HTTP_ADDR=https://127.0.0.1:8500 CONSUL_CACERT=/opt/vault/config/certs/ca.crt.pem CONSUL_CLIENT_CERT=/opt/vault/config/certs/server.crt.pem CONSUL_CLIENT_KEY=/opt/vault/config/certs/server.key.pem $path/bin/consul acl bootstrap | grep SecretID | sed 's/\(SecretID:\)[ ]*\([a-z1-9-]*\)/\2/'`
        echo $consul_http_token > consul-http-token
        aws s3 cp consul-http-token s3://${bucket}/consul-http-token --sse aws:kms --sse-kms-key-id=${bucketkms}
        rm consul-http-token
        sed -i "/\"acl\":/a \"tokens\": { \"agent\":  \"$consul_http_token\" }," /opt/consul/config/default.json
+       source /etc/environment
        service consul restart
     ;;
     *) log_error "Error, aws s3 ls for consul-http-token did not return 0 or 1, but instead $ec"
@@ -647,30 +621,14 @@ EOF
   service consulbackup restart
 }
 
-function install_certs {
-  local -r cert_file="$${1}"
-  local -r file_name="$${2}"
-
-  local -r c_file=$(cat <<EOF
-$cert_file
-EOF
-)
-
-  echo -e "$c_file" > "/opt/vault/config/certs/$file_name"
-}
-
 function main {
-  
-  install_certs "$CA_CERT" "ca.crt.pem"
-  install_certs "$SERVER_CRT" "server.crt.pem"
-  install_certs "$SERVER_KEY" "server.key.pem"
   
   log_info "Starting Consul install"
   install_dependencies
   create_consul_user "$CONSUL_USER"
   create_consul_install_paths "$CONSUL_PATH" "$CONSUL_USER"
   install_binary "$CONSUL_PATH" "$CONSUL_USER"
-  
+
   if command -v consul; then
     log_info "Consul install complete!";
   else
@@ -681,12 +639,15 @@ function main {
   %{ if enable_gossip_encryption }
   configure_gossip_encryption ${bucket} ${bucketkms} "$CONSUL_PATH"
   %{ endif }
-  %{ if enable_rpc_encryption && ca_path == "" }
-  create_ca ${bucket} ${bucketkms} "$CONSUL_PATH" "$CA_PATH" "$DATACENTER" "$CERT_FILE_PATH" "$KEY_FILE_PATH"
-  %{ endif }
+
   %{ if autopilot_redundancy_zone_tag != ""}
   node_meta="{ \"${autopilot_redundancy_zone_tag}\": \"`curl http://169.254.169.254/latest/meta-data/placement/availability-zone`\" }"
   %{ endif }
+
+  echo "copy certs file to /opt/vault/config/certs"
+  sudo aws s3 cp s3://${bucket}/ca.crt.pem /opt/vault/config/certs
+  sudo aws s3 cp s3://${bucket}/server.crt.pem /opt/vault/config/certs
+  sudo aws s3 cp s3://${bucket}/server.key.pem /opt/vault/config/certs 
 
   assert_is_installed "systemctl"
   assert_is_installed "aws"
@@ -733,11 +694,14 @@ function main {
     "default.json" \
     "$CONSUL_PATH/bin" \
     "$CONSUL_PATH/data"
-  start_consul
+  
+  start_consul "$CONSUL_SCHEME" $CONSUL_PORT
+
 
   log_info "Wait for cluster to load"
-  retry "curl localhost:8500/v1/status/leader | grep :" "Waiting for cluster leader" 100
-
+  source /etc/environment
+  retry "curl --cacert /opt/vault/config/certs/ca.crt.pem https://127.0.0.1:8500/v1/status/leader | grep :" "Waiting for cluster leader" 100
+$2
   %{ if enable_acls }
   enable_acls ${bucket} ${bucketkms} $CONSUL_PATH
   %{ endif }

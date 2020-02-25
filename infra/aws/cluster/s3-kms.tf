@@ -89,4 +89,3 @@ resource "aws_kms_key" "vault" {
     Name = "vault-kms-unseal-${var.project_tag}"
   }
 }
-
