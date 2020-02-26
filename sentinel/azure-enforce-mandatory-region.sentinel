@@ -1,0 +1,60 @@
+import "tfplan"
+
+# Get an array of all resources of the given type (or an empty array).
+get_resources = func(type) {
+	if length(tfplan.module_paths else []) > 0 {
+		return get_resources_all_modules(type)
+	} else { 
+		return get_resources_root_only(type)
+	}
+}
+
+get_resources_root_only = func(type) {
+	resources = []
+	named_and_counted_resources = tfplan.resources[type] else {}
+	for named_and_counted_resources as _, r {
+		for r as _, body {
+			append(resources, body)
+		}
+	}
+	return resources
+}
+
+get_resources_all_modules = func(type) {
+	resources = []
+	for tfplan.module_paths as path {
+		named_and_counted_resources = tfplan.module(path).resources[type] else {}
+		for named_and_counted_resources as _, r {
+			for r as _, body {
+				append(resources, body)
+			}
+		}
+	}
+	return resources
+}
+
+mandatory_azure_regions = [
+  "northeurope",
+  "westeurope",
+]
+
+# azurerm_resource_group pretty much handles all resources, but in case the resources are not using the value
+# of azurerm_resource_group we can add the resources as needed in the following array
+azure_resources = [
+	"azurerm_resource_group",
+	"azurerm_virtual_network",
+	"azurerm_network_interface",
+	"azurerm_virtual_machine",
+]
+
+azurerm_resources = rule {
+	all azure_resources as ar {
+		all get_resources(ar) as r {
+	  	mandatory_azure_regions contains  r.applied.location
+		}
+	}
+}
+
+main = rule {
+	(azurerm_resources) else true
+}

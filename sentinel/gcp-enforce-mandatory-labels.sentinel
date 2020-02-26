@@ -1,0 +1,96 @@
+import "tfplan"
+
+# Get an array of all resources of the given type (or an empty array).
+get_resources = func(type) {
+	if length(tfplan.module_paths else []) > 0 {
+		m = get_resources_all_modules(type)
+		return m
+	} else { 
+		r = get_resources_root_only(type)
+		return r
+	}
+}
+
+get_resources_root_only = func(type) {
+	resources = []
+	named_and_counted_resources = tfplan.resources[type] else {}
+	for named_and_counted_resources as _, instances {
+		for instances as _, body {
+			append(resources, body)
+		}
+	}
+	return resources
+}
+
+get_resources_all_modules = func(type) {
+	resources = []
+	for tfplan.module_paths as path {
+		named_and_counted_resources = tfplan.module(path).resources[type] else {}
+		for named_and_counted_resources as _, instances {
+			for instances as _, body {
+				append(resources, body)
+			}
+		}
+	}
+	return resources
+}
+
+
+mandatory_labels = [
+  "billing",
+  "operations",
+  "security",
+]
+
+regex_label = "^([a-z0-9]+)-([a-z0-9]+)-([a-z0-9]+)$"
+
+# add resources that should have compliance in the following array
+resources_that_needs_to_have_compliance = [
+	"google_compute_instance",
+	"google_storage_bucket",
+	"google_compute_instance_template",
+	"google_compute_global_address",
+]
+
+
+
+validate_labels = func(g, l) {
+	if (l is not null) {
+		for mandatory_labels as t {
+			keys(l) contains t
+		}
+		for values(l) as label {
+			if label not matches regex_label {
+				print(g)
+				print("i dont have labels with the correct format")
+				return false
+			}
+		}
+	} else {
+		print(g)
+		print("i dont have labels")
+		return false
+	}
+}
+
+resources_labels = rule {
+	all resources_that_needs_to_have_compliance as g {
+		all get_resources(g) as r {
+				validate_labels(g, r.applied.labels)
+		}
+	}
+}
+
+# sql is handle different because its labels are applied in a different structure
+sql_labels = rule {
+	all get_resources("google_sql_database_instance") as r {
+		all r.applied.settings as s {
+			validate_labels("google_sql_database_instance", s.user_labels)
+		}
+	}
+}
+
+main = rule {
+	(resources_labels) and
+	(sql_labels) else true
+}

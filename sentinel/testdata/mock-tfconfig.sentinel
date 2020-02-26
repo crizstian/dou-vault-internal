@@ -1,0 +1,2238 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"primary_tfe": {
+				"config": {
+					"environment": "tfe-primary",
+				},
+				"references": {
+					"account_id": [
+						"var.account_id",
+					],
+					"certificate": [
+						"var.certificate",
+					],
+					"cloud_provider": [
+						"var.cloud_provider",
+					],
+					"common_labels": [
+						"local.common_labels",
+					],
+					"console_password": [
+						"random_pet.console_password",
+					],
+					"costcenter": [
+						"var.costcenter",
+					],
+					"creator": [
+						"var.creator",
+					],
+					"domain": [
+						"var.domain",
+					],
+					"enable-oslogin": [
+						"var.enable-oslogin",
+					],
+					"enable_regional_group": [
+						"var.enable_regional_group",
+					],
+					"encryption_password": [
+						"local.encryption_password",
+					],
+					"environment": [],
+					"frontend_dns": [
+						"var.frontend_dns",
+					],
+					"gcs_bucket_location": [
+						"var.gcs_bucket_location",
+					],
+					"gcs_credentials": [
+						"var.gcs_credentials",
+					],
+					"image_family": [
+						"var.image_family",
+					],
+					"instance_zone": [
+						"var.instance_zone",
+					],
+					"license_file": [
+						"var.license_file",
+					],
+					"machine_type": [
+						"var.machine_type",
+					],
+					"postgresql_database": [
+						"var.postgresql_database",
+					],
+					"postgresql_disk_size": [
+						"var.postgresql_disk_size",
+					],
+					"postgresql_extra_params": [
+						"var.postgresql_extra_params",
+					],
+					"postgresql_instance_availability_type": [
+						"var.postgresql_instance_availability_type",
+					],
+					"postgresql_instance_maintenance_window_day": [
+						"var.postgresql_instance_maintenance_window_day",
+					],
+					"postgresql_instance_maintenance_window_hour": [
+						"var.postgresql_instance_maintenance_window_hour",
+					],
+					"postgresql_instance_tier": [
+						"var.postgresql_instance_tier",
+					],
+					"postgresql_password": [
+						"var.postgresql_password",
+					],
+					"postgresql_user": [
+						"var.postgresql_user",
+					],
+					"privatekey": [
+						"var.privatekey",
+					],
+					"project": [
+						"var.project",
+					],
+					"project_tag": [
+						"random_id.project_tag",
+					],
+					"region": [
+						"var.region",
+					],
+					"server_status": [
+						"var.server_status",
+					],
+					"server_type": [
+						"var.server_type",
+					],
+					"ssh_keys": [
+						"var.ssh_keys",
+					],
+					"ssr_id": [
+						"var.ssr_id",
+					],
+					"tfe_console_admin_username": [
+						"var.tfe_console_admin_username",
+					],
+					"tfe_cosnole_admin_useremail": [
+						"var.tfe_cosnole_admin_useremail",
+					],
+					"vm_boot_disk_size": [
+						"var.vm_boot_disk_size",
+					],
+					"vm_boot_disk_type": [
+						"var.vm_boot_disk_type",
+					],
+				},
+				"source":  "../",
+				"version": "",
+			},
+		},
+		"outputs": {
+			"primary_tfe_cluster": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"random_pet.console_password",
+					"module.primary_tfe.tfe_nlb",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {
+			"azurerm": {
+				"alias": {
+					"": {
+						"config": {},
+						"references": {
+							"client_id": [
+								"var.client_id",
+							],
+							"client_secret": [
+								"var.client_secret",
+							],
+							"subscription_id": [
+								"var.subscription_id",
+							],
+							"tenant_id": [
+								"var.tenant_id",
+							],
+						},
+						"version": "",
+					},
+				},
+				"config": {},
+				"references": {
+					"client_id": [
+						"var.client_id",
+					],
+					"client_secret": [
+						"var.client_secret",
+					],
+					"subscription_id": [
+						"var.subscription_id",
+					],
+					"tenant_id": [
+						"var.tenant_id",
+					],
+				},
+				"version": "",
+			},
+			"google": {
+				"alias": {
+					"north1": {
+						"config": {},
+						"references": {
+							"credentials": [
+								"var.gcs_credentials",
+							],
+							"project": [
+								"var.project",
+							],
+							"region": [
+								"var.dr_region",
+							],
+							"zone": [
+								"var.dr_region",
+							],
+						},
+						"version": "",
+					},
+					"west1": {
+						"config": {},
+						"references": {
+							"credentials": [
+								"var.gcs_credentials",
+							],
+							"project": [
+								"var.project",
+							],
+							"region": [
+								"var.region",
+							],
+							"zone": [
+								"var.region",
+							],
+						},
+						"version": "",
+					},
+				},
+			},
+			"google-beta": {
+				"alias": {
+					"north1": {
+						"config": {},
+						"references": {
+							"credentials": [
+								"var.gcs_credentials",
+							],
+							"project": [
+								"var.project",
+							],
+							"region": [
+								"var.dr_region",
+							],
+							"zone": [
+								"var.dr_region",
+							],
+						},
+						"version": "",
+					},
+					"west1": {
+						"config": {},
+						"references": {
+							"credentials": [
+								"var.gcs_credentials",
+							],
+							"project": [
+								"var.project",
+							],
+							"region": [
+								"var.region",
+							],
+							"zone": [
+								"var.region",
+							],
+						},
+						"version": "",
+					},
+				},
+			},
+		},
+		"resources": {
+			"azurerm_network_interface": {
+				"main": {
+					"config": {
+						"ip_configuration": [
+							{
+								"name": "testconfiguration1",
+								"private_ip_address_allocation": "Dynamic",
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"ip_configuration": [
+							{
+								"name": [],
+								"private_ip_address_allocation": [],
+								"subnet_id": [
+									"azurerm_subnet.internal",
+								],
+							},
+						],
+						"location": [
+							"azurerm_resource_group.main",
+						],
+						"name": [
+							"var.prefix",
+						],
+						"resource_group_name": [
+							"azurerm_resource_group.main",
+						],
+					},
+				},
+			},
+			"azurerm_resource_group": {
+				"main": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"location": [
+							"var.az_location",
+						],
+						"name": [
+							"var.prefix",
+						],
+					},
+				},
+			},
+			"azurerm_subnet": {
+				"internal": {
+					"config": {
+						"address_prefix": "10.0.2.0/24",
+						"name":           "internal",
+					},
+					"provisioners": null,
+					"references": {
+						"address_prefix": [],
+						"name":           [],
+						"resource_group_name": [
+							"azurerm_resource_group.main",
+						],
+						"virtual_network_name": [
+							"azurerm_virtual_network.main",
+						],
+					},
+				},
+			},
+			"azurerm_virtual_machine": {
+				"main": {
+					"config": {
+						"os_profile": [
+							{
+								"admin_password": "Password1234!",
+								"admin_username": "testadmin",
+								"computer_name":  "hostname",
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": false,
+							},
+						],
+						"storage_image_reference": [
+							{
+								"offer":     "UbuntuServer",
+								"publisher": "Canonical",
+								"sku":       "16.04-LTS",
+								"version":   "latest",
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching":           "ReadWrite",
+								"create_option":     "FromImage",
+								"managed_disk_type": "Standard_LRS",
+								"name":              "myosdisk1",
+							},
+						],
+						"tags": {
+							"environment": "staging",
+						},
+						"vm_size": "Standard_DS1_v2",
+					},
+					"provisioners": null,
+					"references": {
+						"location": [
+							"azurerm_resource_group.main",
+						],
+						"name": [
+							"var.prefix",
+						],
+						"network_interface_ids": [
+							"azurerm_network_interface.main",
+						],
+						"os_profile": [
+							{
+								"admin_password": [],
+								"admin_username": [],
+								"computer_name":  [],
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": [],
+							},
+						],
+						"resource_group_name": [
+							"azurerm_resource_group.main",
+						],
+						"storage_image_reference": [
+							{
+								"offer":     [],
+								"publisher": [],
+								"sku":       [],
+								"version":   [],
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching":           [],
+								"create_option":     [],
+								"managed_disk_type": [],
+								"name":              [],
+							},
+						],
+						"tags":    [],
+						"vm_size": [],
+					},
+				},
+			},
+			"azurerm_virtual_network": {
+				"main": {
+					"config": {
+						"address_space": [
+							"10.0.0.0/16",
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"address_space": [],
+						"location": [
+							"azurerm_resource_group.main",
+						],
+						"name": [
+							"var.prefix",
+						],
+						"resource_group_name": [
+							"azurerm_resource_group.main",
+						],
+					},
+				},
+			},
+			"random_id": {
+				"project_tag": {
+					"config": {
+						"byte_length": 4,
+					},
+					"provisioners": null,
+					"references": {
+						"byte_length": [],
+					},
+				},
+			},
+			"random_pet": {
+				"console_password": {
+					"config": {
+						"length": 3,
+					},
+					"provisioners": null,
+					"references": {
+						"length": [],
+					},
+				},
+			},
+			"random_string": {
+				"default_enc_password": {
+					"config": {
+						"length":  32,
+						"special": false,
+						"upper":   true,
+					},
+					"provisioners": null,
+					"references": {
+						"length":  [],
+						"special": [],
+						"upper":   [],
+					},
+				},
+			},
+		},
+		"variables": {
+			"account_id": {
+				"default":     null,
+				"description": "",
+			},
+			"az_location": {
+				"default":     null,
+				"description": "",
+			},
+			"certificate": {
+				"default":     null,
+				"description": "",
+			},
+			"client_id": {
+				"default":     null,
+				"description": "",
+			},
+			"client_secret": {
+				"default":     null,
+				"description": "",
+			},
+			"cloud_provider": {
+				"default":     null,
+				"description": "",
+			},
+			"costcenter": {
+				"default":     null,
+				"description": "",
+			},
+			"creator": {
+				"default":     null,
+				"description": "",
+			},
+			"domain": {
+				"default":     null,
+				"description": "",
+			},
+			"dr_region": {
+				"default":     null,
+				"description": "",
+			},
+			"enable-oslogin": {
+				"default":     null,
+				"description": "",
+			},
+			"enable_regional_group": {
+				"default":     null,
+				"description": "",
+			},
+			"encryption_password": {
+				"default":     null,
+				"description": "",
+			},
+			"environment": {
+				"default":     null,
+				"description": "",
+			},
+			"frontend_dns": {
+				"default":     null,
+				"description": "",
+			},
+			"gcs_bucket_location": {
+				"default":     null,
+				"description": "",
+			},
+			"gcs_credentials": {
+				"default":     null,
+				"description": "",
+			},
+			"image_family": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_zone": {
+				"default":     null,
+				"description": "",
+			},
+			"license_file": {
+				"default":     null,
+				"description": "",
+			},
+			"machine_type": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_database": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_disk_size": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_extra_params": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_availability_type": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_maintenance_window_day": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_maintenance_window_hour": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_tier": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_password": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_user": {
+				"default":     null,
+				"description": "",
+			},
+			"prefix": {
+				"default":     "tfvmex",
+				"description": "",
+			},
+			"privatekey": {
+				"default":     null,
+				"description": "",
+			},
+			"project": {
+				"default":     null,
+				"description": "",
+			},
+			"region": {
+				"default":     null,
+				"description": "",
+			},
+			"server_status": {
+				"default":     null,
+				"description": "",
+			},
+			"server_type": {
+				"default":     null,
+				"description": "",
+			},
+			"ssh_keys": {
+				"default":     null,
+				"description": "",
+			},
+			"ssr_id": {
+				"default":     null,
+				"description": "",
+			},
+			"subscription_id": {
+				"default":     null,
+				"description": "",
+			},
+			"tenant_id": {
+				"default":     null,
+				"description": "",
+			},
+			"tfe_console_admin_username": {
+				"default":     null,
+				"description": "",
+			},
+			"tfe_cosnole_admin_useremail": {
+				"default":     null,
+				"description": "",
+			},
+			"vm_boot_disk_size": {
+				"default":     null,
+				"description": "",
+			},
+			"vm_boot_disk_type": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe": {
+		"data": {
+			"google_service_account": {
+				"account_id": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"account_id": [
+							"var.account_id",
+						],
+					},
+				},
+			},
+		},
+		"modules": {
+			"tfe_asg": {
+				"config": {
+					"instance_cluster_tag": [
+						"tfe",
+					],
+					"instance_count": 2,
+				},
+				"references": {
+					"cluster_description": [
+						"var.environment",
+						"var.project_tag",
+						"var.region",
+					],
+					"depends_on_other_modules": [
+						"null_resource.tfe_asg_depends_on",
+					],
+					"enable_regional_group": [
+						"var.enable_regional_group",
+					],
+					"gcp_cluster_name": [
+						"var.environment",
+						"var.project_tag",
+					],
+					"gcp_common_labels": [
+						"var.common_labels",
+						"var.server_status",
+						"var.server_type",
+					],
+					"gcp_region": [
+						"var.region",
+					],
+					"gcp_zone": [
+						"var.enable_regional_group",
+						"var.gcp_zone",
+					],
+					"gcp_zones": [
+						"var.enable_regional_group",
+						"var.region",
+						"var.region",
+					],
+					"instance_cluster_tag": [],
+					"instance_count":       [],
+					"instance_disk_size": [
+						"var.vm_boot_disk_size",
+					],
+					"instance_machine_type": [
+						"var.machine_type",
+					],
+					"instance_network": [
+						"module.tfe_network.service_network",
+					],
+					"instance_source_image": [
+						"var.image_family",
+					],
+					"instance_startup_script": [
+						"path.module",
+					],
+					"metadata": [
+						"path.module",
+						"var.license_file",
+						"path.module",
+						"var.gcs_credentials",
+						"path.module",
+						"var.certificate",
+						"path.module",
+						"var.privatekey",
+						"var.console_password",
+						"var.frontend_dns",
+						"var.domain",
+						"local.assistant_port",
+						"var.enable-oslogin",
+						"var.encryption_password",
+						"var.postgresql_user",
+						"var.postgresql_password",
+						"var.postgresql_database",
+						"var.postgresql_extra_params",
+						"var.project",
+						"var.tfe_console_admin_username",
+						"var.tfe_cosnole_admin_useremail",
+						"google_storage_bucket.tfe-store",
+						"google_sql_database_instance.tfe-db-instance",
+						"google_sql_ssl_cert.client_cert",
+						"google_sql_ssl_cert.client_cert",
+						"google_sql_ssl_cert.client_cert",
+					],
+					"service_account_email": [
+						"data.google_service_account.account_id",
+					],
+				},
+				"source":  "./modules/compute/asg",
+				"version": "",
+			},
+			"tfe_fw": {
+				"config": {
+					"gcp_firewall_rules": [
+						{
+							"ports": [
+								"22",
+								"80",
+								"443",
+								"6443",
+								"8800",
+								"23010",
+							],
+							"protocol": "TCP",
+						},
+					],
+					"gcp_source_ranges": [
+						"0.0.0.0/0",
+					],
+					"target_tags": [
+						"tfe",
+					],
+				},
+				"references": {
+					"gcp_firewall_rules": [],
+					"gcp_network": [
+						"module.tfe_network.service_network",
+					],
+					"gcp_network_rule_name": [
+						"var.environment",
+						"var.project_tag",
+					],
+					"gcp_source_ranges": [],
+					"target_tags":       [],
+				},
+				"source":  "./modules/network/fw/custom",
+				"version": "",
+			},
+			"tfe_network": {
+				"config": {
+					"auto_create_subnetworks": true,
+					"enable_nat":              true,
+				},
+				"references": {
+					"auto_create_subnetworks": [],
+					"enable_nat":              [],
+					"gcp_network_name": [
+						"var.environment",
+						"var.project_tag",
+					],
+					"gcp_region": [
+						"var.region",
+					],
+				},
+				"source":  "./modules/network/service-network",
+				"version": "",
+			},
+			"tfe_nlb": {
+				"config": {
+					"target_tags": [
+						"tfe",
+					],
+				},
+				"references": {
+					"depends_on_other_modules": [
+						"null_resource.tfe_nlb_depends_on",
+					],
+					"gcp_cluster_name": [
+						"var.environment",
+						"var.project_tag",
+					],
+					"gcp_instance_group_name": [
+						"var.environment",
+						"var.project_tag",
+					],
+					"gcp_network": [
+						"module.tfe_network.service_network",
+					],
+					"gcp_region": [
+						"var.region",
+					],
+					"gcp_zone": [
+						"var.region",
+					],
+					"nlb_services": [
+						"var.nlb_services",
+					],
+					"project_id": [
+						"var.project",
+					],
+					"target_tags": [],
+				},
+				"source":  "./modules/network/nlb/custom",
+				"version": "",
+			},
+		},
+		"outputs": {
+			"sql_client_cert": {
+				"depends_on":  [],
+				"description": "The CA Certificate used to connect to the SQL Instance via SSL",
+				"references": [
+					"google_sql_ssl_cert.client_cert",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"sql_client_privkey": {
+				"depends_on":  [],
+				"description": "Private Key used to connect to the SQL Instance via SSL",
+				"references": [
+					"google_sql_ssl_cert.client_cert",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"sql_client_server_cert": {
+				"depends_on":  [],
+				"description": "Server Cert used to connect to the SQL Instance via SSL",
+				"references": [
+					"google_sql_ssl_cert.client_cert",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"tfe_network": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"module.tfe_network.service_network",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"tfe_nlb": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"module.tfe_nlb.external_ip",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"tfe_storage_bucket": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"google_storage_bucket.tfe-store",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"tfe_subnets": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"module.tfe_network.service_subnets",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"google_sql_database_instance": {
+				"tfe-db-instance": {
+					"config": {
+						"database_version": "POSTGRES_9_6",
+						"settings": [
+							{
+								"ip_configuration": [
+									{
+										"ipv4_enabled": false,
+										"require_ssl":  "false",
+									},
+								],
+								"maintenance_window": [
+									{},
+								],
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"database_version": [],
+						"name": [
+							"var.environment",
+							"var.ssr_id",
+							"var.server_type",
+							"var.project_tag",
+						],
+						"region": [
+							"var.region",
+						],
+						"settings": [
+							{
+								"availability_type": [
+									"var.postgresql_instance_availability_type",
+								],
+								"disk_size": [
+									"var.postgresql_disk_size",
+								],
+								"ip_configuration": [
+									{
+										"ipv4_enabled": [],
+										"private_network": [
+											"module.tfe_network.service_network",
+										],
+										"require_ssl": [],
+									},
+								],
+								"maintenance_window": [
+									{
+										"day": [
+											"var.postgresql_instance_maintenance_window_day",
+										],
+										"hour": [
+											"var.postgresql_instance_maintenance_window_hour",
+										],
+									},
+								],
+								"tier": [
+									"var.postgresql_instance_tier",
+								],
+								"user_labels": [
+									"var.common_labels",
+								],
+							},
+						],
+					},
+				},
+			},
+			"google_sql_ssl_cert": {
+				"client_cert": {
+					"config": {
+						"common_name": "terraform-generated",
+					},
+					"provisioners": null,
+					"references": {
+						"common_name": [],
+						"instance": [
+							"google_sql_database_instance.tfe-db-instance",
+						],
+						"project": [
+							"var.project",
+						],
+					},
+				},
+			},
+			"google_sql_user": {
+				"users": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"instance": [
+							"google_sql_database_instance.tfe-db-instance",
+						],
+						"name": [
+							"var.postgresql_user",
+						],
+						"password": [
+							"var.postgresql_password",
+						],
+					},
+				},
+			},
+			"google_storage_bucket": {
+				"tfe-store": {
+					"config": {
+						"storage_class": "STANDARD",
+					},
+					"provisioners": null,
+					"references": {
+						"labels": [
+							"var.common_labels",
+							"var.server_status",
+						],
+						"location": [
+							"var.gcs_bucket_location",
+						],
+						"name": [
+							"var.environment",
+							"var.ssr_id",
+							"var.server_type",
+							"var.project_tag",
+						],
+						"storage_class": [],
+					},
+				},
+			},
+			"null_resource": {
+				"tfe_asg_depends_on": {
+					"config":       {},
+					"provisioners": null,
+					"references":   {},
+				},
+				"tfe_nlb_depends_on": {
+					"config":       {},
+					"provisioners": null,
+					"references":   {},
+				},
+			},
+		},
+		"variables": {
+			"account_id": {
+				"default":     null,
+				"description": "",
+			},
+			"certificate": {
+				"default":     null,
+				"description": "",
+			},
+			"cloud_provider": {
+				"default":     null,
+				"description": "Name of cloud provider in 3 chars",
+			},
+			"common_labels": {
+				"default":     null,
+				"description": "",
+			},
+			"console_password": {
+				"default":     null,
+				"description": "",
+			},
+			"costcenter": {
+				"default":     null,
+				"description": "Costcenter is associated with billing and its unique per application",
+			},
+			"creator": {
+				"default":     null,
+				"description": "name of the user who provisioned that resource",
+			},
+			"csp": {
+				"default":     "gcp",
+				"description": "",
+			},
+			"domain": {
+				"default":     null,
+				"description": "",
+			},
+			"enable-oslogin": {
+				"default":     null,
+				"description": "",
+			},
+			"enable_regional_group": {
+				"default":     null,
+				"description": "",
+			},
+			"encryption_password": {
+				"default":     "",
+				"description": "encryption password for the vault unseal key. save this!",
+			},
+			"environment": {
+				"default":     null,
+				"description": "environment name. Examples: DEV / TST / PRD / QTY",
+			},
+			"frontend_dns": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_zone": {
+				"default":     "",
+				"description": "",
+			},
+			"gcs_bucket_location": {
+				"default":     null,
+				"description": "",
+			},
+			"gcs_credentials": {
+				"default":     null,
+				"description": "",
+			},
+			"image_family": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_zone": {
+				"default":     null,
+				"description": "",
+			},
+			"license_file": {
+				"default":     null,
+				"description": "",
+			},
+			"machine_type": {
+				"default":     null,
+				"description": "",
+			},
+			"nlb_services": {
+				"default": [
+					{
+						"name": "tfe",
+						"path": "/",
+						"port": 8800,
+					},
+					{
+						"name": "hc",
+						"path": "/healthz",
+						"port": 23005,
+					},
+				],
+				"description": "",
+			},
+			"postgresql_database": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_disk_size": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_extra_params": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_availability_type": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_maintenance_window_day": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_maintenance_window_hour": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_instance_tier": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_password": {
+				"default":     null,
+				"description": "",
+			},
+			"postgresql_user": {
+				"default":     null,
+				"description": "",
+			},
+			"privatekey": {
+				"default":     null,
+				"description": "",
+			},
+			"project": {
+				"default":     null,
+				"description": "",
+			},
+			"project_tag": {
+				"default":     null,
+				"description": "",
+			},
+			"region": {
+				"default":     null,
+				"description": "",
+			},
+			"salt_master_name": {
+				"default": {
+					"azr": "azr6387prdsltmst02",
+					"gcp": "gcp6387prdsltmst01",
+				},
+				"description": "",
+			},
+			"server_status": {
+				"default":     null,
+				"description": "Status of server if its live in prod or not. Hypercare / LIVE",
+			},
+			"server_type": {
+				"default":     null,
+				"description": "Type of server Examples: WEB / APP / DB",
+			},
+			"ssh_keys": {
+				"default":     null,
+				"description": "",
+			},
+			"ssr_id": {
+				"default":     null,
+				"description": "SSR ID - Unique id of application",
+			},
+			"tfe_console_admin_username": {
+				"default":     null,
+				"description": "",
+			},
+			"tfe_cosnole_admin_useremail": {
+				"default":     null,
+				"description": "",
+			},
+			"vm_boot_disk_size": {
+				"default":     null,
+				"description": "",
+			},
+			"vm_boot_disk_type": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe.module.tfe_asg": {
+		"data":    {},
+		"modules": {},
+		"outputs": {
+			"gcp_region_instance_group_manager": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"var.enable_regional_group",
+					"google_compute_region_instance_group_manager.instance_rigm[0]",
+					"google_compute_instance_group_manager.instance_igm[0]",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"google_compute_health_check": {
+				"instance_autohealing": {
+					"config": {
+						"check_interval_sec": 5,
+						"healthy_threshold":  2,
+						"tcp_health_check": [
+							{},
+						],
+						"timeout_sec":         5,
+						"unhealthy_threshold": 10,
+					},
+					"provisioners": null,
+					"references": {
+						"check_interval_sec": [],
+						"healthy_threshold":  [],
+						"name": [
+							"local.instance_autohealing_name",
+						],
+						"tcp_health_check": [
+							{
+								"port": [
+									"var.instance_hc",
+								],
+							},
+						],
+						"timeout_sec":         [],
+						"unhealthy_threshold": [],
+					},
+				},
+			},
+			"google_compute_instance_group_manager": {
+				"instance_igm": {
+					"config": {
+						"auto_healing_policies": [
+							{
+								"initial_delay_sec": 1800,
+							},
+						],
+						"update_policy": [
+							{
+								"max_surge_fixed":       3,
+								"max_unavailable_fixed": 0,
+								"min_ready_sec":         10,
+								"minimal_action":        "REPLACE",
+								"type":                  "PROACTIVE",
+							},
+						],
+						"version": [
+							{},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"auto_healing_policies": [
+							{
+								"health_check": [
+									"google_compute_health_check.instance_autohealing",
+								],
+								"initial_delay_sec": [],
+							},
+						],
+						"base_instance_name": [
+							"local.instance_igm_name",
+						],
+						"name": [
+							"local.instance_igm_name",
+						],
+						"target_pools": [
+							"var.instance_group_target_pools",
+						],
+						"target_size": [
+							"var.instance_count",
+						],
+						"update_policy": [
+							{
+								"max_surge_fixed":       [],
+								"max_unavailable_fixed": [],
+								"min_ready_sec":         [],
+								"minimal_action":        [],
+								"type":                  [],
+							},
+						],
+						"version": [
+							{
+								"instance_template": [
+									"google_compute_instance_template.instance_template",
+								],
+								"name": [
+									"local.instance_igm_version",
+								],
+							},
+						],
+						"zone": [
+							"var.gcp_zone",
+						],
+					},
+				},
+			},
+			"google_compute_instance_template": {
+				"instance_template": {
+					"config": {
+						"disk": [
+							{
+								"auto_delete": true,
+								"boot":        true,
+							},
+						],
+						"network_interface": [
+							{},
+						],
+						"scheduling": [
+							{
+								"automatic_restart":   true,
+								"on_host_maintenance": "MIGRATE",
+								"preemptible":         false,
+							},
+						],
+						"service_account": [
+							{
+								"scopes": [
+									"userinfo-email",
+									"compute-ro",
+									"storage-ro",
+									"cloud-platform",
+								],
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"description": [
+							"var.cluster_description",
+						],
+						"disk": [
+							{
+								"auto_delete": [],
+								"boot":        [],
+								"disk_size_gb": [
+									"var.instance_disk_size",
+								],
+								"source_image": [
+									"var.instance_source_image",
+								],
+							},
+						],
+						"instance_description": [
+							"local.instance_template_name",
+						],
+						"labels": [
+							"var.gcp_common_labels",
+						],
+						"machine_type": [
+							"var.instance_machine_type",
+						],
+						"metadata": [
+							"var.metadata",
+						],
+						"metadata_startup_script": [
+							"var.instance_startup_script",
+						],
+						"name": [
+							"local.instance_template_name",
+						],
+						"network_interface": [
+							{
+								"network": [
+									"var.instance_network",
+								],
+							},
+						],
+						"region": [
+							"var.gcp_region",
+						],
+						"scheduling": [
+							{
+								"automatic_restart":   [],
+								"on_host_maintenance": [],
+								"preemptible":         [],
+							},
+						],
+						"service_account": [
+							{
+								"email": [
+									"var.service_account_email",
+								],
+								"scopes": [],
+							},
+						],
+						"tags": [
+							"var.instance_cluster_tag",
+							"var.firewall_tag_instance_healthcheck",
+							"var.firewall_tag_instance_outbound",
+						],
+					},
+				},
+			},
+			"google_compute_region_instance_group_manager": {
+				"instance_rigm": {
+					"config": {
+						"auto_healing_policies": [
+							{
+								"initial_delay_sec": 1800,
+							},
+						],
+						"update_policy": [
+							{
+								"max_surge_fixed":       3,
+								"max_unavailable_fixed": 0,
+								"min_ready_sec":         10,
+								"minimal_action":        "REPLACE",
+								"type":                  "PROACTIVE",
+							},
+						],
+						"version": [
+							{},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"auto_healing_policies": [
+							{
+								"health_check": [
+									"google_compute_health_check.instance_autohealing",
+								],
+								"initial_delay_sec": [],
+							},
+						],
+						"base_instance_name": [
+							"local.instance_igm_name",
+						],
+						"distribution_policy_zones": [
+							"var.gcp_zones",
+						],
+						"name": [
+							"local.instance_igm_name",
+						],
+						"region": [
+							"var.gcp_region",
+						],
+						"target_pools": [
+							"var.instance_group_target_pools",
+						],
+						"target_size": [
+							"var.instance_count",
+						],
+						"update_policy": [
+							{
+								"max_surge_fixed":       [],
+								"max_unavailable_fixed": [],
+								"min_ready_sec":         [],
+								"minimal_action":        [],
+								"type":                  [],
+							},
+						],
+						"version": [
+							{
+								"instance_template": [
+									"google_compute_instance_template.instance_template",
+								],
+								"name": [
+									"local.instance_igm_version",
+								],
+							},
+						],
+					},
+				},
+			},
+		},
+		"variables": {
+			"cluster_description": {
+				"default":     null,
+				"description": "",
+			},
+			"depends_on_other_modules": {
+				"default":     null,
+				"description": "",
+			},
+			"enable_oslogin": {
+				"default":     "TRUE",
+				"description": "",
+			},
+			"enable_regional_group": {
+				"default":     false,
+				"description": "",
+			},
+			"firewall_tag_instance_healthcheck": {
+				"default":     "healthcheck",
+				"description": "",
+			},
+			"firewall_tag_instance_outbound": {
+				"default":     "outbound",
+				"description": "",
+			},
+			"gcp_cluster_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_common_labels": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_region": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_zone": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_zones": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_cluster_tag": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_count": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_disk_size": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_group_target_pools": {
+				"default":     [],
+				"description": "To use a Load Balancer with the Consul cluster, you must populate this value. Specifically, this is the list of Target Pool URLs to which new Compute Instances in the Instance Group created by this module will be added. Note that updating the Target Pools attribute does not affect existing Compute Instances. Note also that use of a Load Balancer with Consul is generally discouraged; client should instead prefer to talk directly to the server where possible.",
+			},
+			"instance_hc": {
+				"default": {
+					"name": "tfe",
+					"path": "/",
+					"port": "8800",
+				},
+				"description": "",
+			},
+			"instance_machine_type": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_network": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_source_image": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_startup_script": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_subnetwork": {
+				"default":     "",
+				"description": "if auto-subnets is enabled empty value is by default",
+			},
+			"metadata": {
+				"default":     null,
+				"description": "",
+			},
+			"service_account_email": {
+				"default":     null,
+				"description": "",
+			},
+			"user": {
+				"default":     "ubuntu",
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe.module.tfe_fw": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"google_compute_firewall": {
+				"gcp_fw": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"name": [
+							"var.gcp_network_rule_name",
+						],
+						"network": [
+							"var.gcp_network",
+						],
+						"source_ranges": [
+							"var.gcp_source_ranges",
+						],
+						"target_tags": [
+							"var.target_tags",
+						],
+					},
+				},
+			},
+		},
+		"variables": {
+			"gcp_firewall_rules": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_network": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_network_rule_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_source_ranges": {
+				"default":     null,
+				"description": "",
+			},
+			"target_tags": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe.module.tfe_network": {
+		"data": {
+			"google_compute_network": {
+				"network": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"name": [
+							"var.gcp_network_name",
+						],
+					},
+				},
+			},
+		},
+		"modules": {
+			"nat": {
+				"config": {},
+				"references": {
+					"enable_nat": [
+						"var.enable_nat",
+					],
+					"gcp_nat_address_name": [
+						"var.gcp_network_name",
+					],
+					"gcp_network": [
+						"google_compute_network.vpc",
+					],
+					"gcp_region": [
+						"var.gcp_region",
+					],
+					"gcp_route_nat_name": [
+						"var.gcp_network_name",
+					],
+					"gcp_router_name": [
+						"var.gcp_network_name",
+					],
+					"gcp_subnetworks": [
+						"data.google_compute_network.network",
+					],
+				},
+				"source":  "../nat",
+				"version": "",
+			},
+		},
+		"outputs": {
+			"depends_on_google_service_networking_connection": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"null_resource.google_service_networking_connection",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"service_network": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"google_compute_network.vpc",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"service_subnets": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"data.google_compute_network.network",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"google_compute_global_address": {
+				"private_ip_address": {
+					"config": {
+						"address_type":  "INTERNAL",
+						"prefix_length": 16,
+						"purpose":       "VPC_PEERING",
+					},
+					"provisioners": null,
+					"references": {
+						"address_type": [],
+						"name": [
+							"var.gcp_network_name",
+						],
+						"network": [
+							"google_compute_network.vpc",
+						],
+						"prefix_length": [],
+						"purpose":       [],
+					},
+				},
+			},
+			"google_compute_network": {
+				"vpc": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"auto_create_subnetworks": [
+							"var.auto_create_subnetworks",
+						],
+						"name": [
+							"var.gcp_network_name",
+						],
+					},
+				},
+			},
+			"google_compute_subnetwork": {
+				"subnets": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"ip_cidr_range": [
+							"var.gcp_subnets",
+							"count.index",
+						],
+						"name": [
+							"var.gcp_network_name",
+							"var.gcp_subnets",
+							"count.index",
+						],
+						"network": [
+							"google_compute_network.vpc",
+						],
+						"private_ip_google_access": [
+							"var.gcp_subnets",
+							"count.index",
+						],
+						"region": [
+							"var.gcp_region",
+						],
+					},
+				},
+			},
+			"google_service_networking_connection": {
+				"private_vpc_connection": {
+					"config": {
+						"service": "servicenetworking.googleapis.com",
+					},
+					"provisioners": null,
+					"references": {
+						"network": [
+							"google_compute_network.vpc",
+						],
+						"reserved_peering_ranges": [
+							"google_compute_global_address.private_ip_address",
+						],
+						"service": [],
+					},
+				},
+			},
+			"null_resource": {
+				"google_service_networking_connection": {
+					"config":       {},
+					"provisioners": null,
+					"references":   {},
+				},
+			},
+		},
+		"variables": {
+			"auto_create_subnetworks": {
+				"default":     false,
+				"description": "",
+			},
+			"enable_nat": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_network_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_region": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_subnets": {
+				"default":     [],
+				"description": "",
+			},
+			"gcp_subnets_to_nat": {
+				"default":     [],
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe.module.tfe_network.module.nat": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"google_compute_router": {
+				"router": {
+					"config": {
+						"bgp": [
+							{
+								"asn": 64514,
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"bgp": [
+							{
+								"asn": [],
+							},
+						],
+						"name": [
+							"var.gcp_router_name",
+						],
+						"network": [
+							"var.gcp_network",
+						],
+						"region": [
+							"var.gcp_region",
+						],
+					},
+				},
+			},
+			"google_compute_router_nat": {
+				"nat": {
+					"config": {
+						"log_config": [
+							{
+								"enable": true,
+								"filter": "ERRORS_ONLY",
+							},
+						],
+						"nat_ip_allocate_option":             "AUTO_ONLY",
+						"source_subnetwork_ip_ranges_to_nat": "ALL_SUBNETWORKS_ALL_IP_RANGES",
+					},
+					"provisioners": null,
+					"references": {
+						"log_config": [
+							{
+								"enable": [],
+								"filter": [],
+							},
+						],
+						"name": [
+							"var.gcp_route_nat_name",
+						],
+						"nat_ip_allocate_option": [],
+						"region": [
+							"var.gcp_region",
+						],
+						"router": [
+							"google_compute_router.router[0]",
+						],
+						"source_subnetwork_ip_ranges_to_nat": [],
+					},
+				},
+			},
+		},
+		"variables": {
+			"enable_nat": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_nat_address_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_network": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_region": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_route_nat_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_router_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_subnetworks": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.primary_tfe.module.tfe_nlb": {
+		"data": {
+			"google_compute_instance_group": {
+				"gce_ig": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"name": [
+							"var.gcp_instance_group_name",
+						],
+						"zone": [
+							"var.gcp_region",
+						],
+					},
+				},
+			},
+		},
+		"modules": {},
+		"outputs": {
+			"external_ip": {
+				"depends_on":  [],
+				"description": "The external ip address of the forwarding rule.",
+				"references": [
+					"google_compute_forwarding_rule.gcp_fr",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"google_compute_firewall": {
+				"gcp_lb_fw": {
+					"config": {
+						"allow": [
+							{
+								"protocol": "tcp",
+							},
+						],
+						"source_ranges": [
+							"0.0.0.0/0",
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"allow": [
+							{
+								"ports": [
+									"var.nlb_services",
+								],
+								"protocol": [],
+							},
+						],
+						"name": [
+							"var.gcp_cluster_name",
+							"var.gcp_instance_group_name",
+						],
+						"network": [
+							"var.gcp_network",
+						],
+						"project": [
+							"var.project_id",
+						],
+						"source_ranges": [],
+						"target_tags": [
+							"var.target_tags",
+						],
+					},
+				},
+			},
+			"google_compute_forwarding_rule": {
+				"gcp_fr": {
+					"config": {
+						"load_balancing_scheme": "EXTERNAL",
+					},
+					"provisioners": null,
+					"references": {
+						"load_balancing_scheme": [],
+						"name": [
+							"var.gcp_cluster_name",
+							"var.nlb_services",
+							"count.index",
+						],
+						"port_range": [
+							"var.nlb_services",
+							"count.index",
+						],
+						"project": [
+							"var.project_id",
+						],
+						"region": [
+							"var.gcp_region",
+						],
+						"target": [
+							"google_compute_target_pool.gcp_tp",
+							"count.index",
+						],
+					},
+				},
+			},
+			"google_compute_http_health_check": {
+				"gcp_hhc": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"name": [
+							"var.gcp_cluster_name",
+							"var.nlb_services",
+							"count.index",
+						],
+						"port": [
+							"var.nlb_services",
+							"count.index",
+						],
+						"project": [
+							"var.project_id",
+						],
+						"request_path": [
+							"var.nlb_services",
+							"count.index",
+						],
+					},
+				},
+			},
+			"google_compute_target_pool": {
+				"gcp_tp": {
+					"config": {
+						"session_affinity": "NONE",
+					},
+					"provisioners": null,
+					"references": {
+						"health_checks": [
+							"google_compute_http_health_check.gcp_hhc",
+							"count.index",
+						],
+						"instances": [
+							"data.google_compute_instance_group.gce_ig",
+						],
+						"name": [
+							"var.gcp_cluster_name",
+							"var.nlb_services",
+							"count.index",
+						],
+						"project": [
+							"var.project_id",
+						],
+						"region": [
+							"var.gcp_region",
+						],
+						"session_affinity": [],
+					},
+				},
+			},
+		},
+		"variables": {
+			"depends_on_other_modules": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_cluster_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_instance_group_name": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_network": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_region": {
+				"default":     null,
+				"description": "",
+			},
+			"gcp_zone": {
+				"default":     null,
+				"description": "",
+			},
+			"nlb_services": {
+				"default":     null,
+				"description": "",
+			},
+			"project_id": {
+				"default":     null,
+				"description": "",
+			},
+			"target_tags": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"primary_tfe",
+	],
+	[
+		"primary_tfe",
+		"tfe_asg",
+	],
+	[
+		"primary_tfe",
+		"tfe_fw",
+	],
+	[
+		"primary_tfe",
+		"tfe_network",
+	],
+	[
+		"primary_tfe",
+		"tfe_network",
+		"nat",
+	],
+	[
+		"primary_tfe",
+		"tfe_nlb",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

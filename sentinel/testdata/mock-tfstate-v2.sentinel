@@ -1,0 +1,36 @@
+terraform_version = "0.12.21"
+
+outputs = {
+	"primary_tfe_cluster": {
+		"name":      "primary_tfe_cluster",
+		"sensitive": false,
+		"value": {
+			"installer_dashboard_password": null,
+			"installer_dashboard_url":      null,
+		},
+	},
+}
+
+resources = {
+	"module.primary_tfe.google_service_account.account_id": {
+		"address":        "module.primary_tfe.google_service_account.account_id",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "module.primary_tfe",
+		"name":           "account_id",
+		"provider_name":  "google.west1",
+		"tainted":        false,
+		"type":           "google_service_account",
+		"values": {
+			"account_id":   "aeroframe",
+			"display_name": "aeroframe",
+			"email":        "aeroframe@aeroframe.iam.gserviceaccount.com",
+			"id":           "projects/aeroframe/serviceAccounts/aeroframe@aeroframe.iam.gserviceaccount.com",
+			"name":         "projects/aeroframe/serviceAccounts/aeroframe@aeroframe.iam.gserviceaccount.com",
+			"project":      "aeroframe",
+			"unique_id":    "116624002598362821754",
+		},
+	},
+}
