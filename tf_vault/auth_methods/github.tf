@@ -20,3 +20,10 @@
     policies  = ["dba"]
     backend   = "${vault_ldap_auth_backend.ldap.path}"
 }*/
+
+
+resource "vault_github_auth_backend" "example" {
+  organization = "DigitalOnUs"
+
+  token_policies = ["default", "admin"]
+}
