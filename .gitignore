@@ -12,3 +12,4 @@
 *.pem
 
 **/.DS_Store
+**/*.key
