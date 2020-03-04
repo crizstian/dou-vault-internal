@@ -22,7 +22,7 @@ module "secret_engines" {
 
   enable_kv_engine    = true
   enable_kv_v2_engine = true
-  enable_aws_engine   = true
+  enable_aws_engine   = false
 }
 
 module "generic_endpoints" {
@@ -52,6 +52,9 @@ module "secrets" {
   source     = "./secrets"
   
   depends_on_secrets = [module.secret_engines.depends_on]
-  
   enable_test_secret = true
+  enable_aws_dynamic_secret = true
+  aws_roles = var.aws_roles
+  aws_access_key = var.aws_access_key
+  aws_secret_key = var.aws_secret_key
 }
