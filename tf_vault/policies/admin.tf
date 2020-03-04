@@ -1,5 +1,5 @@
 resource "vault_policy" "admin" {
-  name = "admin"
+  name = "admin-unused"
 
   policy = <<EOT
     path "aws2/*" {
