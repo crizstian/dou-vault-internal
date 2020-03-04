@@ -1,6 +1,6 @@
 output "list_of_policies" {
   value = {
-    DevOps      = [vault_policy.user[0].name, "devops"],
-    Development = [vault_policy.user[0].name, "development"]
+    DevOps      = ["devops", vault_policy.user[0].name, ],
+    Development = ["development", vault_policy.user[0].name]
   }
 }

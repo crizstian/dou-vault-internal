@@ -11,3 +11,7 @@ resource "vault_github_auth_backend" "example" {
   organization   = "DigitalOnUs"
   token_policies = var.github_token_policies
 }
+
+output "github_accessor" {
+  value = var.enable_github ? vault_github_auth_backend.example[0].accessor : ""
+}

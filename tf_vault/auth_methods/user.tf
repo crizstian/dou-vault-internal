@@ -16,4 +16,7 @@ output "depends_on_userpass" {
     value = null_resource.depends.id
 }
 
+output "userpass_accessor" {
+  value = var.enable_userpass ? vault_auth_backend.userpass[0].accessor : ""
+}
 

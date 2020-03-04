@@ -21,7 +21,7 @@ module "policies" {
 
 module "auth_methods" {
   source = "./auth_methods"
-  
+
   enable_github         = true
   github_token_policies = ["default"]
 
@@ -37,7 +37,6 @@ module "secret_engines" {
 
   //Userspass will not be enabled this is for testing purposes
   users    = var.dou_users
-  admins   = var.dou_admins
   policies = module.policies.list_of_policies
 }
 
@@ -50,4 +49,6 @@ module "entities" {
   enable_userpass_entity = true
   users                  = var.dou_users
   policies               = module.policies.list_of_policies
+  userpass_accessor      = module.auth_methods.userpass_accessor
+  github_accessor        = module.auth_methods.github_accessor
 }
