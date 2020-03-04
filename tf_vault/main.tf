@@ -37,8 +37,6 @@ module "generic_endpoints" {
 module "entities" {
   source     = "./entities"
   
-  depends_on_entities = module.auth_methods.depends_on_userpass
-
   enable_github_entity   = true
   enable_userpass_entity = true
 

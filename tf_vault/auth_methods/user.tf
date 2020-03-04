@@ -7,7 +7,6 @@ resource "vault_auth_backend" "userpass" {
   type  = "userpass"
 }
 
-
 resource "null_resource" "depends" {
   depends_on = [vault_auth_backend.userpass]
 }
@@ -19,4 +18,3 @@ output "depends_on_userpass" {
 output "userpass_accessor" {
   value = var.enable_userpass ? vault_auth_backend.userpass[0].accessor : ""
 }
-
