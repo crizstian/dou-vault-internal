@@ -29,4 +29,6 @@ resource "vault_generic_secret" "example" {
       "pizza": "cheese"
     }
   EOT
+
+  depends_on = [vault_mount.secret-kv]
 }
