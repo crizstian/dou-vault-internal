@@ -1,22 +1,10 @@
-provider "vault" {
-  address         = var.vault_address
-  skip_tls_verify = var.skip_tls_verify
-}
-
-terraform {
-  backend "consul" {
-    address = "vault.douvault.com:8500"
-    scheme  = "https"
-    path    = "terraform/vault.state"
-  }
-}
-
 module "policies" {
   source = "./policies"
 
-  enable_templated_policy   = true
+  enable_entity_policy      = true
   enable_admin_policy       = true
-  enable_provisioner_policy = true
+  enable_devops_policy      = true
+  enable_development_policy = true
 }
 
 module "auth_methods" {
@@ -30,25 +18,42 @@ module "auth_methods" {
 }
 
 module "secret_engines" {
-  source = "./secret_engines"
+  source = "./backend"
 
-  depends_on_userpass = module.auth_methods.depends_on_userpass
   enable_kv_engine    = true
+  enable_kv_v2_engine = true
+  enable_aws_engine   = true
+}
 
-  //Userspass will not be enabled this is for testing purposes
+module "generic_endpoints" {
+  source     = "./generic_endpoints"
+
+  depends_on_generic_endpoints = module.auth_methods.depends_on_userpass
+
   users    = var.dou_users
   policies = module.policies.list_of_policies
 }
 
 module "entities" {
-  source = "./entities"
-
-  depends_on_userpass = module.auth_methods.depends_on_userpass
+  source     = "./entities"
+  
+  depends_on_entities = module.auth_methods.depends_on_userpass
 
   enable_github_entity   = true
   enable_userpass_entity = true
-  users                  = var.dou_users
-  policies               = module.policies.list_of_policies
+
+  //Userspass will not be enabled this is for testing purposes
   userpass_accessor      = module.auth_methods.userpass_accessor
   github_accessor        = module.auth_methods.github_accessor
+  
+  users                  = var.dou_users
+  policies               = module.policies.list_of_policies
+}
+
+module "secrets" {
+  source     = "./secrets"
+  
+  depends_on_secrets = [module.secret_engines.depends_on]
+  
+  enable_test_secret = true
 }

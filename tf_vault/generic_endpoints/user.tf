@@ -1,4 +1,4 @@
-variable "depends_on_userpass" {}
+variable "depends_on_generic_endpoints" {}
 
 variable "users" {}
 
@@ -11,16 +11,16 @@ resource "random_pet" "console_password_user" {
 
 resource "vault_generic_endpoint" "user" {
   count      = length(var.users)
-  depends_on = [var.depends_on_userpass]
+  depends_on = [var.depends_on_generic_endpoints]
 
   path                 = "auth/userpass/users/${var.users[count.index].entity_name}"
   ignore_absent_fields = true
   data_json            = <<EOT
-{
-  "policies": ${jsonencode(lookup(var.users[count.index], "is_admin", false) ? sort(concat(["admin"], var.policies[local.users_team[count.index]])) : sort(var.policies[local.users_team[count.index]]))},
-  "password": "${random_pet.console_password_user[count.index].id}"
-}
-EOT
+  {
+    "policies": ${jsonencode(lookup(var.users[count.index], "is_admin", false) ? sort(concat(["admin"], var.policies[local.users_team[count.index]])) : sort(var.policies[local.users_team[count.index]]))},
+    "password": "${random_pet.console_password_user[count.index].id}"
+  }
+  EOT
 }
 
 locals {

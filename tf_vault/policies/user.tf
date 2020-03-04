@@ -1,9 +1,9 @@
-variable "enable_templated_policy" {
+variable "enable_entity_policy" {
   default = false
 }
 
 resource "vault_policy" "user" {
-  count = var.enable_templated_policy ? 1 : 0
+  count = var.enable_entity_policy ? 1 : 0
 
   name   = "user"
   policy = <<EOT

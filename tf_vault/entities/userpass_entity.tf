@@ -10,5 +10,5 @@ resource "vault_identity_entity_alias" "userpass" {
   mount_accessor = var.userpass_accessor
   canonical_id   = vault_identity_entity.entity[count.index].id
 
-  depends_on = [var.depends_on_userpass]
+  depends_on = [var.depends_on_entities]
 }
