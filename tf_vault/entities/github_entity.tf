@@ -5,8 +5,6 @@ variable "enable_github_entity" {
   default = false
 }
 
-variable "depends_on_userpass" {}
-
 variable "github_accessor" {}
 
 resource "vault_identity_entity" "entity" {
@@ -14,8 +12,6 @@ resource "vault_identity_entity" "entity" {
   name     = var.users[count.index].entity_name
   policies = var.policies[var.users[count.index].metadata.team]
   metadata = var.users[count.index].metadata
-
-  depends_on = [var.depends_on_userpass]
 }
 
 
@@ -24,6 +20,4 @@ resource "vault_identity_entity_alias" "github" {
   name           = var.users[count.index].github_user
   mount_accessor = var.github_accessor
   canonical_id   = vault_identity_entity.entity[count.index].id
-
-  depends_on = [var.depends_on_userpass]
 }

@@ -43,8 +43,6 @@ module "secret_engines" {
 module "entities" {
   source = "./entities"
 
-  depends_on_userpass = module.auth_methods.depends_on_userpass
-
   enable_github_entity   = true
   enable_userpass_entity = true
   users                  = var.dou_users
