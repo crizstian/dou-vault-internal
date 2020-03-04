@@ -5,6 +5,9 @@ variable "skip_tls_verify" {
   default = false
 }
 
+variable "aws_access_key" {}
+variable "aws_secret_key" {}
+
 provider "vault" {
   address         = var.vault_address
   skip_tls_verify = var.skip_tls_verify

@@ -3,6 +3,7 @@ variable "dou_users" {
     entity_name = "marin"
     github_user = "marinsalinas"
     userpass    = "marin"
+    is_admin    = true
     metadata = {
       organization = "DigitalOnUs"
       team         = "DevOps"
@@ -20,9 +21,17 @@ variable "dou_users" {
     entity_name = "bernardo"
     github_user = "bernardogza"
     userpass    = "bernardo"
+    is_admin = true
     metadata = {
       organization = "DigitalOnUs"
       team         = "DevOps"
     }
   }]
+}
+
+variable "aws_roles" {
+default=[{
+    name = "devops"
+    role = "./files/aws/iam_role.json"
+}]
 }

@@ -30,5 +30,11 @@ resource "vault_policy" "user" {
     path "auth/token/*" {
       capabilities = [ "read" ]
     }
+
+    # Create tokens for AWS
+    path "aws/creds/*" {
+      capabilities = [ "read" ]
+    }
+    
   EOT
 }
