@@ -20,8 +20,8 @@ module "policies" {
 }
 
 module "auth_methods" {
-  source = "./auth_methods"
-
+  source              = "./auth_methods"
+  
   enable_github         = true
   github_token_policies = ["default", "user"]
 
@@ -36,10 +36,32 @@ module "secret_engines" {
   enable_kv_engine    = true
 
   //Userspass will not be enabled this is for testing purposes
-  users         = [{ name = "marin", password = "fake" }, { name = "bernardo", password = "fake" }]
+  users         = [{ name = "marin", password = "test" }]
   user_policies = ["default", "user"]
 
-  admins         = [{ name = "cristian", password = "fake" }]
+  admins         = [{ name = "cristian", password = "test" }]
   admin_policies = ["default", "admin"]
 
+}
+
+
+module "entities" {
+  source = "./entities"
+
+  depends_on_userpass = module.auth_methods.depends_on_userpass
+
+  enable_identity_entity = true
+
+  entities = [
+    {
+      name     = "marin",
+      policies = ["default", "user", "bernardo"]
+      metadata = {
+        organization = "DigitalOnUs"
+        team         = "DevOps"
+      }
+      github_user = "marinsalinas"
+      userpass    = "marin"
+    }
+  ]
 }
