@@ -20,10 +20,10 @@ module "policies" {
 }
 
 module "auth_methods" {
-  source              = "./auth_methods"
+  source = "./auth_methods"
   
   enable_github         = true
-  github_token_policies = ["default", "user"]
+  github_token_policies = ["default"]
 
   //Userspass will not be enabled this is for testing purposes
   enable_userpass = true
@@ -36,32 +36,18 @@ module "secret_engines" {
   enable_kv_engine    = true
 
   //Userspass will not be enabled this is for testing purposes
-  users         = [{ name = "marin", password = "test" }]
-  user_policies = ["default", "user"]
-
-  admins         = [{ name = "cristian", password = "test" }]
-  admin_policies = ["default", "admin"]
-
+  users    = var.dou_users
+  admins   = var.dou_admins
+  policies = module.policies.list_of_policies
 }
-
 
 module "entities" {
   source = "./entities"
 
   depends_on_userpass = module.auth_methods.depends_on_userpass
 
-  enable_identity_entity = true
-
-  entities = [
-    {
-      name     = "marin",
-      policies = ["default", "user", "bernardo"]
-      metadata = {
-        organization = "DigitalOnUs"
-        team         = "DevOps"
-      }
-      github_user = "marinsalinas"
-      userpass    = "marin"
-    }
-  ]
+  enable_github_entity   = true
+  enable_userpass_entity = true
+  users                  = var.dou_users
+  policies               = module.policies.list_of_policies
 }
