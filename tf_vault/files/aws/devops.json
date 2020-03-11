@@ -1,0 +1,59 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "NotAction": [
+        "iam:*",
+        "organizations:*",
+        "account:*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:DeleteServiceLinkedRole",
+        "iam:ListRoles",
+        "iam:ListPolicies",
+        "iam:CreateRole",
+        "iam:PutRolePolicy",
+        "iam:CreateInstanceProfile",
+        "iam:AddRoleToInstanceProfile",
+        "iam:GetPolicy",
+        "iam:GetRole",
+        "iam:GetRolePolicy",
+        "iam:GetInstanceProfile",
+        "iam:ListAttachedRolePolicies",
+        "iam:AttachUserPolicy",
+        "iam:AttachRolePolicy",
+        "iam:PassRole",
+        "iam:CreateUser",
+        "iam:PutUserPolicy",
+        "iam:CreateGroup",
+        "iam:CreatePolicy",
+        "iam:UpdateRole",
+        "iam:ListSSHPublicKeys",
+        "iam:ListMFADevices",
+        "iam:EnableMFADevice",
+        "iam:ResyncMFADevice",
+        "iam:CreateVirtualMFADevice",
+        "iam:DeactivateMFADevice",
+        "iam:ListVirtualMFADevices",
+        "iam:GetSSHPublicKey",
+        "iam:UpdateSSHPublicKey",
+        "iam:UploadSSHPublicKey",
+        "iam:DeleteSSHPublicKey",
+        "iam:ListAccessKeys",
+        "iam:UpdateAccessKey",
+        "iam:DeleteAccessKey",
+        "iam:GetAccessKeyLastUsed",
+        "iam:CreateAccessKey",
+        "organizations:DescribeOrganization",
+        "account:ListRegions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
