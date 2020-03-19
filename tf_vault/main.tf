@@ -67,4 +67,7 @@ module "secrets" {
   azure_client_id             = var.azure_client_id
   azure_client_secret         = var.azure_client_secret
   azure_resource_group        = var.azure_resource_group
+
+  enable_gcp_dynamic_secret   = true
+  gcp_root_project            = "cramirez-terraform-admin"
 }

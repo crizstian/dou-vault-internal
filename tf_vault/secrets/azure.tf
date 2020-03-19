@@ -6,6 +6,8 @@ variable "azure_client_secret" {}
 variable "azure_resource_group" {}
 
 resource "vault_azure_secret_backend" "azure" {
+  count = var.enable_azure_dynamic_secret ? 1 : 0
+
   subscription_id = var.azure_subscription_id
   tenant_id       = var.azure_tenant_id
   client_id       = var.azure_client_id
@@ -13,7 +15,9 @@ resource "vault_azure_secret_backend" "azure" {
 }
 
 resource "vault_azure_secret_backend_role" "devops" {
-  backend                     = vault_azure_secret_backend.azure.path
+  count = var.enable_azure_dynamic_secret ? 1 : 0
+
+  backend                     = vault_azure_secret_backend.azure.0.path
   role                        = "devops"
   ttl                         = 3600
   max_ttl                     = 7600

@@ -16,3 +16,5 @@
 
 # cert files
 **/*.crt
+
+**/*.json
