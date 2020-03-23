@@ -32,6 +32,6 @@ variable "dou_users" {
 variable "aws_roles" {
 default=[{
     name = "devops"
-    role = "./files/aws/iam_role.json"
+    role = "./files/aws/devops.json"
 }]
 }

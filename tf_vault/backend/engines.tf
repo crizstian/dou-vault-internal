@@ -4,9 +4,6 @@ variable "enable_kv_engine" {
 variable "enable_kv_v2_engine" {
   default = false
 }
-variable "enable_aws_engine" {
-  default = false
-}
 
 resource "vault_mount" "engines" {
   count = var.enable_kv_engine ? length(local.engines) : 0
@@ -19,12 +16,10 @@ resource "vault_mount" "engines" {
 locals {
   kv    = var.enable_kv_engine ? [{type = "kv", path = "secret", description = "kv engine"}] : []
   kv-v2 = var.enable_kv_v2_engine ? [{type = "kv-v2", path = "kv-v2", description = "kv-v2 engine"}] : []
-  aws   = var.enable_aws_engine ? [{type = "aws", path = "aws", description = "aws engine"}] : []
 
   engines = concat(
     local.kv,
     local.kv-v2,
-    local.aws
   )
 }
 
