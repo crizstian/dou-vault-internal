@@ -26,7 +26,7 @@ resource "vault_policy" "user" {
       capabilities = [ "read" ]
     }
 
-    # Create tokens for verification & test
+    # Read token for verification & test
     path "auth/token/*" {
       capabilities = [ "read" ]
     }
@@ -36,15 +36,14 @@ resource "vault_policy" "user" {
       capabilities = [ "read" ]
     }
     
-    # Create tokens for AWS
+    # Create tokens for AZURE
     path "azure/creds/*" {
       capabilities = [ "read" ]
     }
 
-    # Create tokens for AWS
+    # Create tokens for GCP
     path "gcp/token/*" {
       capabilities = [ "read" ]
     }
-    
   EOT
 }

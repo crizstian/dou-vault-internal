@@ -13,7 +13,7 @@ resource "vault_policy" "group" {
   policy = <<EOT
     # Grant permissions on the group specific path
     # The env is specified in the group metadata
-    path "group-kv/data/${local.policies[count.index]}/{{identity.groups.names.${local.policies[count.index]}.metadata.env}}/*" {
+    path "group-kv/data/${local.policies[count.index]}/*" {
         capabilities = [ "create", "update", "read", "delete", "list" ]
     }
 
@@ -21,12 +21,17 @@ resource "vault_policy" "group" {
     path "identity/group/id/{{identity.groups.names.${local.policies[count.index]}.id}}" {
       capabilities = [ "update", "read" ]
     }
+
+    path "transit/+/${local.policies[count.index]}" {
+      capabilities = [ "create", "update", "read", "list" ]
+    }
   EOT
 }
 
 locals {
+  user        = var.enable_entity_policy ? ["user"] : []
+  admin       = var.enable_admin_policy ? ["admin"] : []
   devops      = var.enable_devops_policy ? ["devops"] : []
   development = var.enable_development_policy ? ["development"] : []
-
-  policies = concat(local.devops, local.development)
+  policies    = flatten(concat(local.devops, local.development))
 }

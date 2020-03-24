@@ -17,12 +17,8 @@ resource "vault_generic_endpoint" "user" {
   ignore_absent_fields = true
   data_json            = <<EOT
   {
-    "policies": ${jsonencode(lookup(var.users[count.index].metadata, "is_admin", false) ? sort(concat(["admin"], var.policies[local.users_team[count.index]])) : sort(var.policies[local.users_team[count.index]]))},
+    "policies": ${jsonencode(sort(var.policies))},
     "password": "${random_pet.console_password_user[count.index].id}"
   }
   EOT
-}
-
-locals {
-  users_team = var.users.*.metadata.team
 }

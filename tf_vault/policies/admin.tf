@@ -1,9 +1,6 @@
 variable "enable_admin_policy" {
   default = false
 }
-variable "enable_provisioner_policy" {
-  default = false
-}
 
 # Personas Policies
 resource "vault_policy" "admin-policy" {
@@ -55,6 +52,15 @@ resource "vault_policy" "admin-policy" {
     path "sys/health"
     {
       capabilities = ["read", "sudo"]
+    }
+    # Transit Keys
+    path "transit/keys/*"
+    {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+    }
+    # Group member can update the group information
+    path "identity/*" {
+      capabilities = ["create", "read", "update", "delete", "list", "sudo"]
     }
   EOT
 }

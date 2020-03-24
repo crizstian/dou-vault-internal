@@ -23,12 +23,17 @@ resource "vault_identity_entity_alias" "github" {
 }
 
 locals {
-  devops_members = [for key, user in vault_identity_entity.entity :  user.id if user.metadata.team=="DevOps"]
-  admins_members = [for key, user in vault_identity_entity.entity :  user.id if user.metadata.is_admin=="true"]
+  development_members = [for key, user in vault_identity_entity.entity :  user.id if user.metadata.team=="devops"]
+  devops_members      = [for key, user in vault_identity_entity.entity :  user.id if user.metadata.team=="development"]
+  admins_members      = [for key, user in vault_identity_entity.entity :  user.id if user.metadata.is_admin=="true"]
 }
 
 output "devops" {
   value = local.devops_members
+}
+
+output "development" {
+  value = local.development_members
 }
 
 output "admins" {

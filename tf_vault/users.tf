@@ -2,36 +2,50 @@ variable "dou_users" {
   default = [{
     entity_name = "marin"
     github_user = "marinsalinas"
-    userpass    = "marin"
     metadata = {
       organization = "DigitalOnUs"
-      team         = "DevOps"
-      is_admin    = false
+      team         = "devops"
+      is_admin     = false
     }
     }, {
     entity_name = "cristian"
     github_user = "crizstian"
-    userpass    = "cristian"
     metadata = {
       organization = "DigitalOnUs"
-      team         = "DevOps"
-      is_admin    = true
+      team         = "devops"
+      is_admin     = true
     }
     }, {
     entity_name = "bernardo"
     github_user = "bernardogza"
-    userpass    = "bernardo"
     metadata = {
       organization = "DigitalOnUs"
-      team         = "DevOps"
-      is_admin = true
+      team         = "devops"
+      is_admin     = true
+    }
+  }, {
+    entity_name = "isaias"
+    github_user = "isai"
+    metadata = {
+      organization = "DigitalOnUs"
+      team         = "development"
+      is_admin     = false
     }
   }]
 }
 
 variable "aws_roles" {
-default=[{
-    name = "devops"
-    role = "./files/aws/devops.json"
-}]
+  default=[{
+      name = "devops"
+      role = "./files/aws/devops.json"
+  }]
+}
+
+locals {
+  temp  = [for key, member in var.dou_users : member.metadata.team]
+  teams = concat(distinct(local.temp), ["admin"])
+}
+
+output "teams" {
+  value = local.teams
 }
