@@ -53,7 +53,7 @@ module "groups" {
   enable_development_group = true
   development_members      = module.entities.development
 
-  policies            = module.policies.list_of_policies
+  policies = module.policies.list_of_policies
 }
 
 module "secret_engines" {
@@ -81,5 +81,13 @@ module "secret_engines" {
 
   enable_transit_secret = true
   transit_groups_key    = local.teams
+}
 
+resource "vault_audit" "audit" {
+  type = "syslog"
+
+  options = {
+    tag      = "vault" 
+    facility = "LOCAL7"
+  }
 }
