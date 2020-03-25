@@ -82,12 +82,3 @@ module "secret_engines" {
   enable_transit_secret = true
   transit_groups_key    = local.teams
 }
-
-resource "vault_audit" "audit" {
-  type = "syslog"
-
-  options = {
-    tag      = "vault" 
-    facility = "LOCAL7"
-  }
-}
