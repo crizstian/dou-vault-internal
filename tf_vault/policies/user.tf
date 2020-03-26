@@ -26,6 +26,11 @@ resource "vault_policy" "user" {
       capabilities = [ "read" ]
     }
 
+    path "auth/token/*"
+    {
+      capabilities = ["read", "update"]
+    }
+
     # Read token for verification & test
     path "auth/token/*" {
       capabilities = [ "read" ]

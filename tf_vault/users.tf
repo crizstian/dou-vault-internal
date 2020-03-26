@@ -47,5 +47,9 @@ locals {
 }
 
 output "teams" {
-  value = local.teams
+  value = {
+    admin  = module.entities.admins_name,
+    devops = module.entities.devops_name,
+    development = module.entities.development_name
+  }
 }

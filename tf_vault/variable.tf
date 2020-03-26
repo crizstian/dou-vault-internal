@@ -20,5 +20,5 @@ variable "azure_resource_group" {
 }
 
 variable "gcp_root_project" {
-  default = "cramirez-terraform-admin"
+  default = "470066674558"
 }
