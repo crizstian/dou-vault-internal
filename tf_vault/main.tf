@@ -11,7 +11,7 @@ module "auth_methods" {
   source = "./auth_methods"
 
   enable_github         = true
-  github_token_policies = ["default"]
+  github_token_policies = ["github"]
 
   # Userspass will not be enabled this is for testing purposes
   enable_userpass = true
