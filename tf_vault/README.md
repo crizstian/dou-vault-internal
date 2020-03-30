@@ -196,5 +196,29 @@ Create a tf file under "groups" folder with the name of the group you want to cr
 
 Under the identity group resource you will specify the policies that should be attached to that group and also especify the members that will belong to that particular group as you can see in the example above for admin group.
 
+### How to login into vault
+
+So far we have enabled two authentication methods, Gitgub and user pass.
+
+    - Github: You will need your github token and login and make urse that your github account is included on the DigtalOnUs github organization.
+    - Userpass: You can login using a username and password pre-generated.
+
+### How to generate AWS, GCP and azure keys
+
+After doing a succesfully logging into vault you will be able to generate access keys for AWS, GCP and Azure.
+
+AWS:
+
+    vault read aws/creds/devops
+
+GCP:
+
+    vault read gcp/token/devops
+
+Azure:
+
+    vault read  azure/creds/devops
+
 ### Workflow of how to add a new vault user.
 
+![](./workflow.jpg)
