@@ -1,5 +1,10 @@
 ## HOW TO RUN INFRA
 
+### # Contributors
+- Cristian Ramirez <cristian.ramirez@digitalonus.com>
+- Bernardo Garza <bernardo.garza@digitalonus.com>
+- Marin Salinas <marin.salinas@digitalonus.com>
+
 The following information will need to be provided:
 
     - AWS ACCESS KEY: var.access_key

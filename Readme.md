@@ -1,5 +1,10 @@
 ## DigitalOnUs Vault Infrastructure
 
+### # Contributors
+- Cristian Ramirez <cristian.ramirez@digitalonus.com>
+- Bernardo Garza <bernardo.garza@digitalonus.com>
+- Marin Salinas <marin.salinas@digitalonus.com>
+
 ### **DOU Vault purpose**
 
 The purpose of this repository is to have a better key management of AWS, GCP and Azure. For this we will be using HashiCorp Vault tool. Vault will be used as a secret management tool and allow Digital OnUs users to login into vault and generate these keys to be able to securely deploy resources on any of those providers without having to worry if the keys get leaked out.
