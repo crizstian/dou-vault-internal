@@ -203,6 +203,15 @@ So far we have enabled two authentication methods, Gitgub and user pass.
     - Github: You will need your github token and login and make urse that your github account is included on the DigtalOnUs github organization.
     - Userpass: You can login using a username and password pre-generated.
 
+Login using CLI
+
+ - Github: vault login -method=gitgub
+ - Userpass: vault login -method=userpass
+
+Login using UI
+
+    Go to vault URL (example: https://vault.douvault.com:8200). You will se login options for vault. Select the one that you would like to use to login and provide required information.
+
 ### How to generate AWS, GCP and azure keys
 
 After doing a succesfully logging into vault you will be able to generate access keys for AWS, GCP and Azure.
@@ -217,8 +226,19 @@ GCP:
 
 Azure:
 
-    vault read  azure/creds/devops
+    vault read azure/creds/devops
+
 
 ### Workflow of how to add a new vault user.
 
 ![](./workflow.jpg)
+
+    1.- Update users.tf
+
+    2.- Add your user-entity name and github name and details
+
+    3.- Create Pull request
+
+    4.- Wait for review/merge
+
+    5.- Login into vault
