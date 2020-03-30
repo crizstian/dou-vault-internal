@@ -1,49 +1,89 @@
-## HOW TO RUN TF_VAULT
+## TF_VAULT
 
 TF_VAULT implements the `vault-terraform-provider` to configure the DOU Vault Service.
 
-### Contributors
+### # Contributors
 - Cristian Ramirez <cristian.ramirez@digitalonus.com>
 - Bernardo Garza <bernardo.garza@digitalonus.com>
 - Marin Salinas <marin.salinas@digitalonus.com>
 
-### Services available in Vault
+### # Services available in `dou-vault`
 
-- AWS Dynamic Secrets
-  - attaches a devops iam role and generates the dynamic keys
-- GCP Dynamic Secrets
-- Azure Dynamic Secrets
-- KV secret engine with a personal path scoped to each user
+
+- Dynamic Secrets for the following engines
+    - AWS
+      - attaches a devops iam role and generates the dynamic keys
+
+    - GCP
+      - attaches a list of roles and generates a token
+
+    - Azure (still in proceses of enabling)
+
+- KV secret engine (version 1)
+    - under the secret/ path + {{ entity_name }} which will be a personal path scoped to each user
+
 - Transit Secret Engine for Encryption as a Service
   - 3 keys generated for each team
     - devops
     - development
     - admin
+
 - multi authentication processes which uses identity entity and identity groups to assign the proper policies no matter what authentication process you use.
   - github
   - userpass // for testing purposes
   - ldap // coming next
 
-### Required env variables
+---
+### # **Workflow of how to add a new vault user**
 
-- CONSUL_HTTP_TOKEN
-- CONSUL_CLIENT_CERT
+![](./workflow.jpg)
 
-- VAULT_CACERT
-- VAULT_TOKEN
+    1.- Update users.tf
+
+    2.- Add your user-entity name and github name and details
+
+    3.- Create Pull request
+
+    4.- Wait for review/merge
+
+    5.- Login into vault
 
 ---
-For Adding Modules or initializing
-```
-CONSUL_HTTP_TOKEN=... CONSUL_CLIENT_CERT="./files/ca.crt.key"  terraform init
-```
+### # **How to login into vault**
+
+So far we have enabled two authentication methods, Github and userpass.
+
+- Github: You will need your personal github token to login, make sure that your github account is included on the DigtalOnUs github organization.
+
+- Userpass: has been enabled this feature will not be used, since is just for testing purposes.
+
+#### Login using CLI
+
+ - Github: vault login -method=gitgub
+
+#### Login using UI
+
+Go to vault URL (example: https://vault.douvault.com:8200). You will se login options for vault. Select the one that you would like to use to login and provide required information. e.g github auth method.
 
 ---
-For running a Terraform Plan / Apply
-```
-CONSUL_HTTP_TOKEN=... CONSUL_CLIENT_CERT="./files/ca.crt.key" VAULT_CACERT="./files/ca.crt.key" VAULT_TOKEN=... terraform plan / apply
-```
-### Terraform Vault modules
+### # **How to generate AWS, GCP and azure keys**
+
+After doing a succesfully logging into vault you will be able to generate access keys for AWS, GCP and Azure.
+
+**AWS:**
+
+    vault read aws/creds/devops
+
+**GCP:**
+
+    vault read gcp/token/devops
+
+**Azure:**
+
+    vault read azure/creds/devops
+
+---
+### Terraform Vault modules structure
 
 We decided to create modules for the features that will be integrated into Vault. So far the features that were included are:
 
@@ -196,49 +236,27 @@ Create a tf file under "groups" folder with the name of the group you want to cr
 
 Under the identity group resource you will specify the policies that should be attached to that group and also especify the members that will belong to that particular group as you can see in the example above for admin group.
 
-### How to login into vault
+### How to run tf_vault code
 
-So far we have enabled two authentication methods, Gitgub and user pass.
+Required env variables:
 
-    - Github: You will need your github token and login and make urse that your github account is included on the DigtalOnUs github organization.
-    - Userpass: You can login using a username and password pre-generated.
+    CONSUL_HTTP_TOKEN=... 
+    CONSUL_CLIENT_CERT="./files/ca.crt.key" 
 
-Login using CLI
+    VAULT_CACERT="./files/ca.crt.pem" 
+    VAULT_TOKEN=... 
+    VAULT_ADDR=https://vault.douvault.com:8200
+    
+    TF_VAR_aws_access_key=...
+    TF_VAR_aws_secret_key=... 
+    
+    TF_VAR_azure_subscription_id=... 
+    TF_VAR_azure_tenant_id=... 
+    TF_VAR_azure_client_id=... 
+    TF_VAR_azure_client_secret=... 
 
- - Github: vault login -method=gitgub
- - Userpass: vault login -method=userpass
+Then run the appropiate: `terraform commands init | plan | apply`
 
-Login using UI
+### # **Adding additional Vault Configurations**
 
-    Go to vault URL (example: https://vault.douvault.com:8200). You will se login options for vault. Select the one that you would like to use to login and provide required information.
-
-### How to generate AWS, GCP and azure keys
-
-After doing a succesfully logging into vault you will be able to generate access keys for AWS, GCP and Azure.
-
-AWS:
-
-    vault read aws/creds/devops
-
-GCP:
-
-    vault read gcp/token/devops
-
-Azure:
-
-    vault read azure/creds/devops
-
-
-### Workflow of how to add a new vault user.
-
-![](./workflow.jpg)
-
-    1.- Update users.tf
-
-    2.- Add your user-entity name and github name and details
-
-    3.- Create Pull request
-
-    4.- Wait for review/merge
-
-    5.- Login into vault
+Just follow the conventions used in this repo create a PR and explain the purpose of adding this new configuration.
