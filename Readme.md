@@ -2,6 +2,8 @@
 
 ### **DOU Vault purpose**
 
+The purpose of this repository is to have a better key management of AWS, GCP and Azure. For this we will be using HashiCorp Vault tool. Vault will be used as a secret management tool and allow Digital OnUs users to login into vault and read these keys to be able to securely deploy resources on any of those providers without having to worry if the keys get leaked out.
+
 ### **DOU-VAULT-INTERNAL Repo Structure**
 
 ```
