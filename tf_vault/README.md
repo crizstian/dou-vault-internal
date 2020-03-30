@@ -195,3 +195,7 @@ Create a tf file under "groups" folder with the name of the group you want to cr
                 }
 
 Under the identity group resource you will specify the policies that should be attached to that group and also especify the members that will belong to that particular group as you can see in the example above for admin group.
+
+### Workflow of how to add a new vault user.
+
+![](./workflow.jpg)
