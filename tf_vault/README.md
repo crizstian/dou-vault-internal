@@ -198,3 +198,4 @@ Under the identity group resource you will specify the policies that should be a
 
 ### Workflow of how to add a new vault user.
 
+![](./workflow.jpg)
