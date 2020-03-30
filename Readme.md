@@ -4,12 +4,12 @@
 
 The purpose of this repository is to have a better key management of AWS, GCP and Azure. For this we will be using HashiCorp Vault tool. Vault will be used as a secret management tool and allow Digital OnUs users to login into vault and generate these keys to be able to securely deploy resources on any of those providers without having to worry if the keys get leaked out.
 
-What if a key gets leaked out ?
+**What if a key gets leaked out ?**
 
 if some keys got leak, we can execute the following command:
 
 ```
-vault revoke -prefix aws/
+$ vault revoke -prefix aws/
 ```
 
 in case if there was an aws keys leak, or we can revoke all gcp or azure, and with this we achieve a better security adminstration about the usage of our cloud providers.
