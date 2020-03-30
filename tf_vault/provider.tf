@@ -7,6 +7,6 @@ terraform {
   backend "consul" {
     address = "vault.douvault.com:8500"
     scheme  = "https"
-    path    = "terraform/vault.state"
+    path    = "terraform/tf_vault/vault.state"
   }
 }
