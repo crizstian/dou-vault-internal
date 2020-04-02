@@ -10,7 +10,7 @@ data "template_cloudinit_config" "consul" {
   part {
     filename     = "install-consul.sh"
     content_type = "text/x-shellscript"
-    content = templatefile("${path.cwd}/cluster/consul-installation.tpl",
+    content      = templatefile("${path.cwd}/cluster/consul-installation.tpl",
       {
         consul_scheme                       = "https",
         consul_port                         = 8500,
@@ -51,23 +51,23 @@ data "template_cloudinit_config" "consul" {
 }
 
 module "consul" {
-  source            = "terraform-aws-modules/autoscaling/aws"
-  version           = "3.4.0"
-  image_id          = var.ami_id
-  name              = "${var.project_tag}-consul"
-  health_check_type = "EC2"
-  max_size          = var.consul_cluster_size
-  min_size          = var.consul_cluster_size
-  desired_capacity  = var.consul_cluster_size
-  instance_type     = "t2.small"
+  source               = "terraform-aws-modules/autoscaling/aws"
+  version              = "3.4.0"
+  image_id             = var.ami_id
+  name                 = "${var.project_tag}-consul"
+  health_check_type    = "EC2"
+  max_size             = var.consul_cluster_size
+  min_size             = var.consul_cluster_size
+  desired_capacity     = var.consul_cluster_size
+  instance_type        = "t2.small"
   vpc_zone_identifier  = module.vpc.public_subnets
   key_name             = var.ssh_key_name
   enabled_metrics      = ["GroupTotalInstances"]
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
+  user_data            = data.template_cloudinit_config.consul.rendered
   target_group_arns    = [        
     aws_lb_target_group.tg_ncv_consul.arn
   ]
-  
   tags = concat(
     [
       for k, v in var.tags :
@@ -85,5 +85,4 @@ module "consul" {
       }
     ]
   )
-  user_data = data.template_cloudinit_config.consul.rendered
 }

@@ -58,5 +58,4 @@ resource "aws_default_security_group" "primary_cluster" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
 }

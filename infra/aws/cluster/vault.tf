@@ -7,22 +7,22 @@ data "template_cloudinit_config" "vault" {
     data.template_cloudinit_config.consul,
   ]
   
-  gzip         = true
+  gzip          = true
   base64_encode = true
   part {
     filename     = "install-vault.sh"
     content_type = "text/x-shellscript"
     content = templatefile("${path.cwd}/cluster/vault-installation.tpl",
       {
-      consul_scheme                       = "https",
-      consul_port                         = 8500,
+      consul_scheme                 = "https",
+      consul_port                   = 8500,
       consul_path                   = var.consul_path,
       vault_path                    = var.vault_path,
       consul_user                   = var.consul_user,
       vault_user                    = var.vault_user,
-      ca_file_path                        = "/opt/vault/config/certs/ca.crt.pem",
-      cert_file_path                      = "/opt/vault/config/certs/server.crt.pem",
-      key_file_path                       = "/opt/vault/config/certs/server.key.pem",
+      ca_file_path                  = "/opt/vault/config/certs/ca.crt.pem",
+      cert_file_path                = "/opt/vault/config/certs/server.crt.pem",
+      key_file_path                 = "/opt/vault/config/certs/server.key.pem",
       server                        = var.server,
       client                        = var.client,
       config_dir                    = var.config_dir,
@@ -61,10 +61,11 @@ module "vault" {
   target_group_arns = [        
     aws_lb_target_group.tg_ncv_vault.arn,
   ]
-  vpc_zone_identifier = module.vpc.public_subnets
-  key_name            = var.ssh_key_name
+  vpc_zone_identifier  = module.vpc.public_subnets
+  key_name             = var.ssh_key_name
   enabled_metrics      = ["GroupTotalInstances"]
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
+  user_data            = data.template_cloudinit_config.vault.rendered
   tags = [
     for k, v in var.tags :
     {
@@ -73,5 +74,4 @@ module "vault" {
       propagate_at_launch : true
     }
   ]
-  user_data = data.template_cloudinit_config.vault.rendered
 }

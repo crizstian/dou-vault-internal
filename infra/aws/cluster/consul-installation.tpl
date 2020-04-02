@@ -2,12 +2,15 @@
 readonly CONSUL_USER=%{ if consul_user != "" }${consul_user}%{else}"consul"%{endif}
 readonly SCRIPT_DIR="$(cd "$(dirname "$${BASH_SOURCE[0]}")" && pwd)"
 readonly SYSTEM_BIN_DIR="/usr/local/bin"
+readonly SYSTEMD_CONFIG_PATH="/etc/systemd/system"
+
 readonly SCRIPT_NAME="$(basename "$0")"
 readonly AWS_ASG_TAG_KEY="aws:autoscaling:groupName"
+
 readonly CONSUL_CONFIG_FILE="default.json"
 readonly CONSUL_GOSSIP_ENCRYPTION_CONFIG_FILE="gossip-encryption.json"
 readonly CONSUL_RPC_ENCRYPTION_CONFIG_FILE="rpc-encryption.json"
-readonly SYSTEMD_CONFIG_PATH="/etc/systemd/system"
+
 
 readonly EC2_INSTANCE_METADATA_URL="http://169.254.169.254/latest/meta-data"
 readonly EC2_INSTANCE_DYNAMIC_DATA_URL="http://169.254.169.254/latest/dynamic"
