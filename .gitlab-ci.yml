@@ -12,7 +12,7 @@ tf_vault_plan:
     - terraform version
     - mkdir plan && cd tf_vault/ && cat $VAULT_CACERT
     - terraform init -input=true
-    - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} VAULT_CACERT=${VAULT_CACERT} CONSUL_CLIENT_CERT=${CONSUL_CLIENT_CERT} VAULT_TOKEN=${VAULT_TOKEN} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} VAULT_ADDR=${VAULT_ADDR} terraform plan -out=../plan/${CI_PIPELINE_ID}.tfplan
+    - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} CONSUL_CACERT=${CONSUL_CACERT} VAULT_CACERT=${VAULT_CACERT} VAULT_TOKEN=${VAULT_TOKEN} VAULT_ADDR=${VAULT_ADDR} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} terraform plan -out=../plan/${CI_PIPELINE_ID}.tfplan
   artifacts:
     paths:
       - plan/
