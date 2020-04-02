@@ -1,9 +1,10 @@
 stages:
   - build
 
-image: hashicorp/terraform:0.12.24
+image: crizstian/terraform:0.12.24
 
 build_a:
   stage: build
   script:
-    - version
+    - echo "This job builds something."
+    - terraform version
