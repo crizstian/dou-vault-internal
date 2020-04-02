@@ -18,5 +18,3 @@
 **/*.crt
 
 **/*.json
-
-Dockerfile
