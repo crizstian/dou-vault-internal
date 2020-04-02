@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 image: 
   name: crizstian/terraform:0.12.24.1
@@ -9,12 +10,15 @@ tf_vault_plan:
   stage: build
   script:
     - terraform version
-    - cd tf_vault/
-    - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} VAULT_CACERT=${VAULT_CACERT} CONSUL_CLIENT_CERT=${CONSUL_CLIENT_CERT} VAULT_TOKEN=${VAULT_TOKEN} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} VAULT_ADDR=${VAULT_ADDR} terraform plan -out=${CI_PIPELINE_ID}.tfplan
+    - mkidir plan && cd tf_vault/
+    - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} VAULT_CACERT=${VAULT_CACERT} CONSUL_CLIENT_CERT=${CONSUL_CLIENT_CERT} VAULT_TOKEN=${VAULT_TOKEN} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} VAULT_ADDR=${VAULT_ADDR} terraform plan -out=../plan/${CI_PIPELINE_ID}.tfplan
+  artifacts:
+    paths:
+      - plan/
 
 tf_vault_apply:
-  stage: build
+  stage: deploy
   script:
     - terraform version
-    - cd tf_vault/
     - ls
+    - ls plan/
