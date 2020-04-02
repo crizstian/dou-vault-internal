@@ -5,7 +5,10 @@ image:
   name: crizstian/terraform:0.12.24.1
   entrypoint: [""]
 
-build_a:
+terraform:
   stage: build
   script:
     - terraform version
+    - ls
+    - cd tf_vault/
+    - ${CONSUL_HTTP_TOKEN} ${VAULT_CACERT} ${CONSUL_CLIENT_CERT} ${VAULT_TOKEN} ${TF_VAR_aws_access_key} ${TF_VAR_aws_secret_key} ${TF_VAR_azure_subscription_id} ${TF_VAR_azure_tenant_id} ${TF_VAR_azure_client_id} ${TF_VAR_azure_client_secret} ${VAULT_ADDR} terraform plan

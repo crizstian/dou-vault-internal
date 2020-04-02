@@ -5,6 +5,7 @@ module "policies" {
   enable_admin_policy       = true
   enable_devops_policy      = true
   enable_development_policy = true
+  enable_provisioner_policy = true
 }
 
 module "auth_methods" {
