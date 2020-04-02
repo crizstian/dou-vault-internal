@@ -16,6 +16,8 @@ tf_vault_plan:
   artifacts:
     paths:
       - plan/
+  only:
+  - merge_requests
 
 tf_vault_apply:
   stage: deploy
@@ -24,3 +26,5 @@ tf_vault_apply:
     - cd tf_vault/
     - terraform init -input=true
     - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} CONSUL_CACERT=${CONSUL_CACERT} VAULT_CACERT=${VAULT_CACERT} VAULT_TOKEN=${VAULT_TOKEN} VAULT_ADDR=${VAULT_ADDR} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} TF_VAR_gcp_root_creds=${TF_VAR_gcp_root_creds} terraform apply -auto-approve ../plan/${CI_PIPELINE_ID}.tfplan
+  only:
+  - master

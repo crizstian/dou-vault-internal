@@ -23,6 +23,17 @@ in case if there was an aws keys leak, or we can revoke all gcp or azure, and wi
 Also this repository has the benefit to allow dou-users to extend their knowledge on vault, they can practice any implementation on the current infrastructure, like writing / reading / deleting secrets in the kv store, encrypting / decrypting information using the transit secret engine + other implementations.
 
 
+### **How to access DOU Vault and Consul UI**
+
+To access vault-ui please visit in your browser the following url [DOU Vault URL](https://vault.douvault.com:8200).
+
+To login into vault ui, please follow the instructions set in the [tf_vault/ folder](./tf_vault).
+
+and for consul-ui please visit in your browser the following url [DOU Consul URL](https://vault.douvault.com:8500).
+
+To view all Consul information you will need to set the CONSUL_HTTP_TOKEN value which is: `7871581e-2ed8-029b-1652-7e7cffc1f793` and will allow you in.
+
+
 ### **DOU-VAULT-INTERNAL Repo Structure**
 
 ```
