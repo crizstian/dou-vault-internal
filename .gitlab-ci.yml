@@ -6,5 +6,4 @@ image: crizstian/terraform:0.12.24
 build_a:
   stage: build
   script:
-    - echo "This job builds something."
     - terraform version
