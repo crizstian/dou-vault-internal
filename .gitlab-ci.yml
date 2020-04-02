@@ -10,9 +10,8 @@ tf_vault_plan:
   stage: build
   script:
     - terraform version
-    - mkdir plan && cd tf_vault/
+    - mkdir plan && cd tf_vault/ && echo ${VAULT_CACERT} > ca.crt.pem
     - terraform init -input=true
-    - echo ${VAULT_CACERT} > ca.crt.pem
     - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN} VAULT_CACERT=ca.crt.pem CONSUL_CLIENT_CERT=ca.crt.pem VAULT_TOKEN=${VAULT_TOKEN} TF_VAR_aws_access_key=${TF_VAR_aws_access_key} TF_VAR_aws_secret_key=${TF_VAR_aws_secret_key} TF_VAR_azure_subscription_id=${TF_VAR_azure_subscription_id} TF_VAR_azure_tenant_id=${TF_VAR_azure_tenant_id} TF_VAR_azure_client_id=${TF_VAR_azure_client_id} TF_VAR_azure_client_secret=${TF_VAR_azure_client_secret} VAULT_ADDR=${VAULT_ADDR} terraform plan -out=../plan/${CI_PIPELINE_ID}.tfplan
   artifacts:
     paths:
