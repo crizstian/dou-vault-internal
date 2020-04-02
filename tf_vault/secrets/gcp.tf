@@ -1,11 +1,12 @@
 variable "enable_gcp_dynamic_secret" {}
 variable "gcp_root_project" {}
+variable "gcp_root_creds" {}
 
 resource "vault_gcp_secret_backend" "gcp" {
   count = var.enable_gcp_dynamic_secret ? 1 : 0
   
   path        = "gcp"
-  credentials = file("./files/vault-gcp.json")
+  credentials = file(var.gcp_root_creds)
 }
 
 resource "vault_gcp_secret_roleset" "roleset" {

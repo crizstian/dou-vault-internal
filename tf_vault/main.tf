@@ -79,6 +79,7 @@ module "secret_engines" {
 
   enable_gcp_dynamic_secret   = true
   gcp_root_project            = var.gcp_root_project
+  gcp_root_creds              = var.gcp_root_creds
 
   enable_transit_secret = true
   transit_groups_key    = local.teams
