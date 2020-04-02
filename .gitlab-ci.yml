@@ -1,7 +1,7 @@
 stages:
   - build
 
-image: crizstian/terraform:0.12.24
+image: crizstian/terraform:0.12.24.1
 
 build_a:
   stage: build
