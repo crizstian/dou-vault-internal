@@ -11,5 +11,4 @@ RUN curl -s https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraf
   rm terraform.zip && \
   terraform version
 
-WORKDIR /
 ENTRYPOINT ["/bin/sh"]
