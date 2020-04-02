@@ -1,7 +1,9 @@
 stages:
   - build
 
-image: crizstian/terraform:0.12.24.1
+image: 
+  name: crizstian/terraform:0.12.24.1
+  entrypoint: [""]
 
 build_a:
   stage: build
